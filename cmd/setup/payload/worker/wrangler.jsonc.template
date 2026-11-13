@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "__WORKER_NAME__",
+  "main": "src/guarded_index.js",
+  "compatibility_date": "2026-08-18",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "FLY_APP": "__APP_NAME__",
+    "FLY_MACHINE_ID": "__MACHINE_ID__",
+    "INSTALL_WORKER_NAME": "__WORKER_NAME__",
+    "INSTALL_REGION": "__REGION__",
+    "INSTALL_VERSION": "__INSTALL_VERSION__",
+    "INSTALL_KV_ID": "__KV_ID__",
+    "INSTALL_FLY_TOKEN_UNTIL": "__FLY_TOKEN_UNTIL__"
+  },
+  "triggers": {
+    "crons": ["* * * * *"]
+  }
+}

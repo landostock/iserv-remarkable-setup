@@ -1,0 +1,18 @@
+{
+  "dry_run": true,
+  "lookback_days": 30,
+  "max_file_mb": 95,
+  "extensions": ["pdf", "epub"],
+  "sources": [
+    {
+      "name": "Mathe",
+      "iserv_path": "Eigene/Schule/Mathe",
+      "remarkable_dir": "/IServ/Mathe"
+    },
+    {
+      "name": "Physik",
+      "iserv_path": "Gruppen/Physik/Unterrichtsmaterial",
+      "remarkable_dir": "/IServ/Physik"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Check formatting and release definitions
+        shell: bash
+        run: |
+          set -euo pipefail
+          unformatted="$(gofmt -l cmd/setup helper/rmfolder)"
+          if [ -n "$unformatted" ]; then
+            printf 'The following Go files are not gofmt-formatted:\n%s\n' "$unformatted"
+            exit 1
+          fi
+          git diff --check
+          python3 packaging/check_release_definition.py
+
+      - name: Go tests with race detector
+        run: go test -race ./...
+
+      - name: Go vet
+        run: go vet ./...
+
+      - name: reMarkable helper tests and vet
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd helper/rmfolder
+          go test ./...
+          go vet ./...
+
+      - name: Cross-compile setup companion
+        shell: bash
+        run: |
+          set -euo pipefail
+          for target in \
+            linux/amd64 linux/arm64 \
+            windows/amd64 windows/arm64 \
+            darwin/amd64 darwin/arm64; do
+            os=${target%/*}
+            arch=${target#*/}
+            suffix=""
+            if [ "$os" = windows ]; then suffix=.exe; fi
+            CGO_ENABLED=0 GOOS="$os" GOARCH="$arch" go build -trimpath -o "/tmp/setup-${os}-${arch}${suffix}" ./cmd/setup
+            test -s "/tmp/setup-${os}-${arch}${suffix}"
+          done
+
+      - name: Python tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s cmd/setup/payload/tests -v
+          python3 -m unittest discover -s packaging -p 'test_*.py' -v
+
+      - name: Python syntax check
+        run: |
+          python3 -m compileall -q cmd/setup/payload packaging
+
+      - name: Worker tests
+        shell: bash
+        run: node --test cmd/setup/payload/worker/src/*.test.js
+
+      - name: JavaScript syntax check
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in cmd/setup/payload/worker/src/*.js; do
+            node --check "$file"
+          done
+
+      - name: Go vulnerability checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          go install golang.org/x/vuln/cmd/govulncheck@v1.7.0
+          "$(go env GOPATH)/bin/govulncheck" ./...
+          (cd helper/rmfolder && "$(go env GOPATH)/bin/govulncheck" ./...)

@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IServ → reMarkable Setup</title>
+<style>
+:root{color-scheme:light;--bg:#f4f6f8;--card:#fff;--ink:#18212b;--muted:#65717e;--line:#d9e0e7;--accent:#176b5b;--accent2:#e8f5f1;--danger:#a52a2a;--warn:#8a6100;--warnbg:#fff8e6;--ok:#176b40}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(1060px,calc(100% - 28px));margin:28px auto 70px}h1{font-size:clamp(27px,5vw,42px);letter-spacing:0;margin:0}h2{margin:0 0 8px;font-size:21px}h3{margin:18px 0 8px;font-size:16px}p{margin:6px 0}.muted{color:var(--muted)}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:18px}.badge{padding:5px 9px;background:var(--accent2);color:var(--accent);border-radius:999px;font-weight:700;font-size:12px;white-space:nowrap}.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:20px 0}.step{height:7px;border-radius:99px;background:var(--accent)}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 4px 18px rgba(20,30,40,.04)}.subcard{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fbfcfd}.hidden{display:none!important}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}.checkline{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px}.checkline input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}label{display:block;font-weight:650;margin:10px 0 5px}input,select,button{font:inherit}input[type=text],input[type=password],input[type=number],select{width:100%;padding:10px 11px;border:1px solid #bfc8d2;border-radius:9px;background:#fff;color:var(--ink)}input:focus,select:focus{outline:3px solid rgba(23,107,91,.15);border-color:var(--accent)}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid rgba(23,107,91,.2);outline-offset:3px}button{border:0;border-radius:10px;padding:10px 14px;font-weight:750;cursor:pointer}button.primary{background:var(--accent);color:white}button.secondary{background:var(--accent2);color:#14594d}button.ghost{background:#eef1f4;color:#33404d}button.danger{background:#fff0f0;color:var(--danger)}button:disabled{opacity:.5;cursor:wait}.statusbox{padding:12px;border-radius:11px;background:#f7f9fa;border:1px solid #e7ebef;margin:10px 0;overflow-wrap:anywhere}.statusbox.ok{background:#edf8f3;border-color:#cfe9dc;color:var(--ok)}.statusbox.error{background:#fff0f0;border-color:#f1caca;color:var(--danger);max-height:14rem;overflow:auto}.statusbox.warn{background:var(--warnbg);border-color:#ecdca8;color:var(--warn)}.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.tool{padding:10px;background:#f7f9fa;border-radius:9px;border:1px solid #e7ebef}.folder-list{display:grid;gap:7px;margin:10px 0;max-height:320px;overflow:auto}.folder-btn{text-align:left;background:#f5f7f9;border:1px solid var(--line);white-space:normal}.folder-path{font-size:13px;color:var(--muted);overflow-wrap:anywhere}.selected{border:2px solid #91c9bb;background:#edf8f3;border-radius:12px;padding:10px;margin-top:10px;min-height:66px}.link-workspace{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}.link-arrow{margin:14px 0;text-align:center;font-weight:800;color:var(--accent)}.mapping{display:grid;grid-template-columns:.8fr 1.25fr 1.25fr auto;gap:8px;align-items:end;padding:10px;border:1px solid #edf0f2;border-radius:12px;margin:8px 0}.mapping.just-added{background:#edf8f3;border-color:#cfe9dc;animation:addedPulse 1.4s ease-out}.readonly{padding:10px 11px;border:1px solid var(--line);border-radius:9px;background:#f7f9fa;min-height:42px;overflow-wrap:anywhere}@keyframes addedPulse{0%{box-shadow:0 0 0 4px rgba(23,107,91,.18)}100%{box-shadow:0 0 0 0 rgba(23,107,91,0)}}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}.mini-summary{padding:10px 12px;border-radius:12px;background:var(--accent2);color:#14594d;font-weight:700}.schedule-top{margin-top:10px}.compact-card{display:flex;flex-direction:column;justify-content:space-between;gap:8px;min-height:120px}.compact-card label:first-child{margin-top:0}.schedule-shell{display:grid;grid-template-columns:260px 1fr;gap:16px;margin-top:18px}.schedule-sidebar,.schedule-editor{border:1px solid var(--line);border-radius:16px;background:#fbfcfd}.schedule-sidebar{padding:14px}.schedule-editor{padding:16px}.sidebar-head{font-size:12px;font-weight:800;letter-spacing:0;text-transform:uppercase;color:var(--muted);margin-bottom:10px}.day-list{display:grid;gap:8px}.daybtn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#31404c;text-align:left}.daybtn .day-meta{display:flex;flex-direction:column;align-items:flex-start}.daybtn .day-name{font-weight:800}.daybtn .day-sub{font-size:12px;color:var(--muted)}.daybtn .day-count{min-width:30px;height:30px;padding:0 9px;border-radius:999px;background:#eef2f4;display:flex;align-items:center;justify-content:center;font-weight:800;color:#455260}.daybtn.active{background:linear-gradient(135deg,#176b5b,#1d7d69);color:#fff;border-color:#176b5b;box-shadow:0 10px 24px rgba(23,107,91,.18)}.daybtn.active .day-sub{color:rgba(255,255,255,.82)}.daybtn.active .day-count{background:rgba(255,255,255,.18);color:#fff}.editor-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}.editor-head h3{margin:0 0 4px;font-size:19px}.editor-actions{display:flex;gap:8px;flex-wrap:wrap}.window-stack{display:grid;gap:12px}.window-card{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px;border:1px solid #e4ebf1;border-radius:14px;background:#fff;box-shadow:0 1px 0 rgba(17,24,39,.02)}.window-index{font-weight:800;color:#51606e;min-width:92px}.time-fields{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end}.time-fields label{margin-top:0}.time-arrow{padding-bottom:12px;color:#7a8793;font-weight:800}.window-card input[type=time]{width:100%;padding:10px 11px;border:1px solid #bfc8d2;border-radius:10px;background:#fff;color:var(--ink)}.empty-state{border:1px dashed #cfd8df;border-radius:14px;padding:18px;background:#fff}.copy-panel{margin-top:14px;padding:14px;border:1px solid #d8e7e1;border-radius:14px;background:#f7fcfa}.copydays{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.copydays label{margin:0;font-weight:600;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}.copydays input{accent-color:var(--accent)}.tune-grid{margin-top:16px}.setting-card{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fbfcfd}.setting-card label:first-child,.setting-card h3{margin-top:0}.type-grid{display:flex;gap:10px;flex-wrap:wrap}.type-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-weight:700;margin:0}.type-chip input{accent-color:var(--accent)}.password-note{margin-top:8px;font-size:13px;color:var(--muted)}.logs{background:#10151a;color:#d9e0e7;border-radius:12px;padding:12px;white-space:pre-wrap;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;max-height:320px;overflow:auto}.note{border-left:4px solid #d2a52e;background:#fff9e8;padding:10px 12px;border-radius:8px}.success{border-left:4px solid var(--ok);background:#edf8f3;padding:12px;border-radius:8px}.connectmark{font-weight:800;color:var(--ok)}
+.fly-code{margin-top:12px;padding:12px;border:1px solid #d8e7e1;border-radius:12px;background:#f7fcfa}.fly-code label{margin-top:0}.fly-code-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.provider-prerequisite{margin-top:12px;padding:11px 12px;border-left:3px solid #d2a52e;border-radius:8px;background:#fff9e8;color:#5f4b13;font-size:13px}
+@media(max-width:900px){.schedule-shell{grid-template-columns:1fr}.window-card{grid-template-columns:1fr}.window-index{min-width:0}.time-fields{grid-template-columns:1fr 1fr}.time-arrow{display:none}.editor-actions{width:100%}.editor-actions button{flex:1 1 220px}}
+@media(max-width:800px){.grid2,.tools,.link-workspace,.tune-grid{grid-template-columns:1fr}.mapping{grid-template-columns:1fr 1fr}.mapping button{grid-column:1/-1}.hero{display:block}.badge{display:inline-block;margin-top:10px}.card{padding:16px}.link-arrow{display:none}.section-head{display:block}.mini-summary{display:inline-block;margin-top:8px}.daybtn{padding:10px 11px}}
+
+/* Release Candidate __APP_VERSION__ — product-wide visual system */
+body{background:radial-gradient(circle at 12% 0%,rgba(23,107,91,.08),transparent 28rem),linear-gradient(180deg,#f7f9fa 0,#f2f5f6 100%);min-height:100vh}
+main{width:min(1140px,calc(100% - 32px));margin:24px auto 80px}
+.hero{padding:22px 24px;border:1px solid rgba(217,224,231,.9);border-radius:22px;background:rgba(255,255,255,.88);box-shadow:0 16px 50px rgba(28,46,55,.08);backdrop-filter:blur(14px);align-items:center}
+.hero h1{font-size:clamp(29px,5vw,46px);line-height:1.03}.hero .muted{font-size:15px}.badge{padding:8px 12px;border:1px solid rgba(23,107,91,.12);box-shadow:0 4px 14px rgba(23,107,91,.08)}
+.wizard-steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:18px 0;position:sticky;top:10px;z-index:20;padding:8px;border:1px solid rgba(217,224,231,.9);border-radius:16px;background:rgba(247,249,250,.88);backdrop-filter:blur(16px);box-shadow:0 8px 26px rgba(28,46,55,.07)}
+.step-nav{min-width:0;padding:9px 10px;border-radius:11px;background:transparent;color:#64717c;border:1px solid transparent;display:flex;align-items:center;gap:8px;text-align:left;font-weight:750}
+.step-nav .step-num{display:flex;width:24px;height:24px;align-items:center;justify-content:center;border-radius:999px;background:#e8edf0;color:#52606c;font-size:12px;flex:0 0 auto}.step-nav .step-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.step-nav.active{background:#fff;color:var(--accent);border-color:#d5e5df;box-shadow:0 5px 16px rgba(23,107,91,.10)}.step-nav.active .step-num{background:var(--accent);color:#fff}.step-nav.visited{color:#34434f}.step-nav.visited .step-num{background:var(--accent2);color:var(--accent)}
+.card{border-radius:22px;padding:24px;margin:16px 0;box-shadow:0 14px 42px rgba(28,46,55,.07);border-color:#dde4e9}.card.step-hidden{display:none}.card>h2,.section-head h2{font-size:24px;letter-spacing:0}
+.subcard{border-radius:16px;padding:18px;background:linear-gradient(180deg,#fcfdfd,#fafcfc);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+button{transition:transform .14s ease,box-shadow .14s ease,background .14s ease}button:not(:disabled):hover{transform:translateY(-1px)}button.primary{box-shadow:0 7px 18px rgba(23,107,91,.18)}button.primary:not(:disabled):hover{box-shadow:0 9px 22px rgba(23,107,91,.24)}button.secondary:not(:disabled):hover{background:#dff0ea}button.ghost:not(:disabled):hover{background:#e6ebef}
+input[type=text],input[type=password],input[type=number],select{padding:11px 12px;border-radius:11px;border-color:#c7d0d8;box-shadow:inset 0 1px 2px rgba(20,30,40,.02)}
+.statusbox{border-radius:12px}.tools{gap:10px}.tool{padding:12px;border-radius:12px;background:#fff}.checkline{border-radius:14px;background:#fbfcfd;padding:14px}
+.folder-list{gap:8px;max-height:350px;padding-right:2px}.folder-btn{position:relative;padding:11px 12px 11px 40px;border-radius:11px;background:#fff;transition:background .14s,border-color .14s,transform .14s}.folder-btn:hover{border-color:#a9cfc4;background:#f3fbf8}.folder-glyph{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:12px;border-radius:3px;background:#c8d6d1}.folder-glyph:before{content:"";position:absolute;left:1px;top:-4px;width:8px;height:5px;border-radius:3px 3px 0 0;background:#b5c9c2}
+.selected{border-width:1px;border-color:#b9dbd1;border-radius:14px;padding:12px;background:linear-gradient(180deg,#f0faf6,#eaf7f2)}
+.link-workspace{gap:16px}.mapping{padding:14px;border-radius:14px;background:#fbfcfd;border-color:#e4e9ed;box-shadow:0 2px 8px rgba(20,30,40,.025)}.readonly{border-radius:10px;background:#fff}
+.note{border-left:0;border:1px solid #ebd8a1;border-radius:12px;padding:13px 14px}.success{border-left:0;border:1px solid #c7e3d6;border-radius:14px;padding:15px}
+.wizard-footer{position:relative;z-index:10;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin-top:18px;padding:12px;border:1px solid rgba(217,224,231,.92);border-radius:16px;background:rgba(255,255,255,.92);box-shadow:0 16px 40px rgba(28,46,55,.14);backdrop-filter:blur(16px)}.wizard-position{text-align:center;color:var(--muted);font-weight:700;font-size:13px}
+.logs{border:1px solid #25313a;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+@media(max-width:880px){.wizard-steps{display:flex;overflow-x:auto;scrollbar-width:none}.wizard-steps::-webkit-scrollbar{display:none}.step-nav{flex:0 0 auto}.step-nav .step-label{max-width:150px}.hero{padding:18px}.wizard-footer{grid-template-columns:auto 1fr auto}}
+@media(max-width:560px){main{width:min(100% - 18px,1140px);margin-top:10px}.hero{border-radius:18px}.card{padding:18px;border-radius:18px}.step-nav .step-label{display:none}.step-nav{padding:8px}.wizard-position{font-size:12px}.wizard-footer{gap:8px;padding:9px}.wizard-footer button{padding:9px 11px}.fly-code-row{grid-template-columns:1fr}.fly-code-row button{width:100%}}
+.lang-switch{display:flex;gap:4px;padding:3px;border-radius:12px;background:#eef2f3}.lang-switch button{padding:7px 10px}.lang-switch button.active{background:var(--accent);color:#fff}.card a{color:var(--accent);font-weight:700}.wizard-error{margin:0 0 10px}
+
+.maintenance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}.health-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}.health-item{padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff}.health-item strong{display:block;font-size:15px}.health-item .health-state{display:inline-flex;align-items:center;gap:7px;margin-top:7px;font-weight:800;font-size:13px}.health-dot{width:9px;height:9px;border-radius:999px;background:#aeb8c0}.health-item.ok .health-dot{background:#23845e}.health-item.warn .health-dot{background:#c08b16}.health-item.error .health-dot{background:#bd3a3a}.maintenance-panel{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fbfcfd}.maintenance-panel h3{margin-top:0}.maintenance-panel .panel-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.repair-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}.repair-card{border:1px solid #e3e9ed;border-radius:14px;padding:14px;background:#fff}.repair-card h4{margin:0 0 4px;font-size:15px}.repair-status{font-size:13px;color:var(--muted);margin:8px 0}.safe-test{border-color:#cfe4dc;background:linear-gradient(180deg,#fbfffd,#f3faf7)}.danger-zone{border-color:#eed0d0;background:#fffafa}.maintenance-password-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:end}.maintenance-log{margin-top:12px}.maintenance-kicker{font-size:12px;font-weight:800;letter-spacing:0;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+@media(max-width:900px){.health-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.maintenance-grid,.repair-columns{grid-template-columns:1fr}}
+@media(max-width:560px){.health-grid{grid-template-columns:1fr}.maintenance-password-row{grid-template-columns:1fr}.maintenance-password-row button{width:100%}}
+
+.install-progress{margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fbfcfd}.progress-track{height:10px;border-radius:999px;background:#e8edef;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#176b5b,#2a957c);border-radius:999px;transition:width .35s ease}.progress-meta{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:13px}.progress-meta strong{font-size:14px}.progress-meta span{color:var(--muted);font-weight:700}.install-details{margin-top:10px}.install-details summary{cursor:pointer;font-weight:750;color:#44515c}.install-details[open] summary{margin-bottom:10px}.recovery-box{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:#fbfcfd;padding:12px 14px}.recovery-box summary{cursor:pointer;font-weight:800;color:#3e4c57}.recovery-fields{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin-top:12px}.recovery-fields label{margin-top:0}.recovery-note{font-size:13px;color:var(--muted);margin-top:8px}@media(max-width:800px){.recovery-fields{grid-template-columns:1fr}.recovery-fields button{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+.field-label{display:block;font-weight:650;margin:10px 0 5px}
+</style>
+<style>
+#mappingServiceSlot>.card,#mappingWorkspaceSlot>.card{box-shadow:none;margin:12px 0;padding:16px;border-radius:14px}
+#mappingServiceSlot h2,#mappingWorkspaceSlot h2{font-size:20px}
+#mappingConnections{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px}
+#mappingConnections summary{cursor:pointer;font-weight:700}
+</style>
+</head>
+<body>
+<main>
+  <div class="hero">
+    <div><h1>IServ → reMarkable</h1><p class="muted">Einrichtungsassistent · verbinden, Ordner verknüpfen, Zeitplan festlegen, fertig</p></div>
+    <div class="row" style="justify-content:flex-end">
+      <div class="lang-switch" aria-label="Sprache / Language"><button id="langDE" class="ghost" type="button">DE</button><button id="langEN" class="ghost" type="button">EN</button></div>
+      <span class="badge">Setup Version __APP_VERSION__</span>
+      <button class="ghost" id="quitSetup" type="button">Setup beenden</button>
+    </div>
+  </div>
+  <section class="card hidden" id="maintenanceCard">
+    <div class="section-head">
+      <div>
+        <div class="maintenance-kicker">IServ → reMarkable</div>
+        <h2>Vorhandene Installation verwalten</h2>
+        <p class="muted">Prüfen, reparieren, sicher testen, aktualisieren oder vollständig entfernen – ohne Terminal.</p>
+      </div>
+      <span class="badge" id="installedVersion">Installiert</span>
+    </div>
+
+    <div class="maintenance-panel" style="margin-top:14px">
+      <div class="row between">
+        <div><h3>Systemzustand</h3><p class="muted">Eine lokale Prüfung kontrolliert Dashboard und Fly-App, ohne Dateien zu verändern.</p></div>
+        <button class="secondary" id="maintenanceCheck" type="button">Jetzt prüfen</button>
+      </div>
+      <div class="health-grid" id="maintenanceHealth">
+        <div class="health-item"><strong>Dashboard</strong><span class="health-state"><span class="health-dot"></span><span>noch nicht geprüft</span></span></div>
+        <div class="health-item"><strong>Fly.io</strong><span class="health-state"><span class="health-dot"></span><span>noch nicht geprüft</span></span></div>
+        <div class="health-item"><strong>Sync-Machine</strong><span class="health-state"><span class="health-dot"></span><span>noch nicht geprüft</span></span></div>
+        <div class="health-item"><strong>Version</strong><span class="health-state"><span class="health-dot"></span><span>lokal</span></span></div>
+      </div>
+      <div class="panel-actions"><button class="primary" id="maintenanceOpen" type="button">Dashboard öffnen</button><button class="secondary" id="maintenanceFlyLogin" type="button">Fly.io neu verbinden</button><button class="secondary" id="maintenanceCFLogin" type="button">Cloudflare neu verbinden</button></div>
+      <div id="maintenanceFlyCodePanel" class="fly-code hidden"><p><strong>Zeigt Fly.io „Hand this code back to your terminal“?</strong> Trage den angezeigten Code hier ein.</p><div class="fly-code-row"><div><label for="maintenanceFlyCode">Fly.io-Code</label><input id="maintenanceFlyCode" type="text" autocomplete="off" spellcheck="false"></div><button class="secondary" id="maintenanceFlyCodeSubmit" type="button">Code übernehmen</button></div><div id="maintenanceFlyCodeStatus" class="statusbox hidden"></div></div>
+      <div id="maintenanceConnectionStatus" class="statusbox">Cloud-Anmeldungen können hier unabhängig erneuert werden.</div>
+    </div>
+
+    <div id="maintenanceActivationSlot"></div>
+
+    <div class="maintenance-panel" style="margin-top:14px">
+      <h3>Ordnerverknüpfungen bearbeiten</h3>
+      <p class="muted">Lade deine gespeicherten Zuordnungen und wähle links IServ, rechts reMarkable. Speichern startet keine Synchronisation.</p>
+      <label for="maintenanceMappingsPassword">Aktuelles Dashboard-Passwort</label>
+      <input id="maintenanceMappingsPassword" type="password" autocomplete="current-password">
+      <div class="panel-actions"><button id="maintenanceMappingsLoad" class="secondary" type="button">Gespeicherte Zuordnungen laden</button></div>
+      <div id="maintenanceMappingsStatus" class="statusbox" aria-live="polite">Noch keine Zuordnungen geladen.</div>
+      <div id="maintenanceMappingEditor" class="hidden">
+        <details id="mappingConnections"><summary>Ordnerzugang für diese Sitzung verbinden</summary><p class="muted">Zum Durchsuchen brauchst du die IServ-Verbindung und einen reMarkable-Einmalcode. Diese Anmeldung gilt nur lokal für die aktuelle Sitzung. Die Cloud-Zugangsdaten bleiben unverändert.</p><div id="mappingServiceSlot"></div></details>
+        <div id="mappingWorkspaceSlot"></div>
+        <div class="panel-actions"><button id="maintenanceMappingsSave" class="primary" type="button" disabled>Zuordnungen speichern</button><button id="maintenanceMappingsCancel" class="ghost" type="button">Schließen</button></div>
+      </div>
+    </div>
+
+    <div class="maintenance-panel" style="margin-top:14px">
+      <h3>Verbindungen reparieren</h3>
+      <p class="muted">Neue Zugangsdaten werden erst getestet und danach über deine Fly.io-Verbindung als geheime Cloud-Einstellungen übernommen. Sie werden nicht dauerhaft im Installer gespeichert.</p>
+      <div class="repair-columns">
+        <div class="repair-card">
+          <h4>IServ</h4><div class="repair-status" id="repairIServStatus">Neue Zugangsdaten können hier geprüft werden.</div>
+          <label for="repairIServURL">WebDAV-Adresse</label><input id="repairIServURL" type="text" placeholder="https://webdav.deine-schule.de">
+          <label for="repairIServUser">Benutzername</label><input id="repairIServUser" type="text" autocomplete="username">
+          <label for="repairIServPassword">Passwort oder App-Passwort</label><input id="repairIServPassword" type="password" autocomplete="current-password">
+          <div class="panel-actions"><button class="secondary" id="repairIServTest" type="button">Verbindung testen</button><button class="primary" id="repairIServApply" type="button" disabled>Neue Zugangsdaten übernehmen</button></div>
+        </div>
+        <div class="repair-card">
+          <h4>reMarkable</h4><div class="repair-status" id="repairRMStatus">Bei abgelaufener Autorisierung einfach neu verbinden.</div>
+          <button class="ghost" id="repairRMOpen" type="button">reMarkable-Freigabe öffnen</button>
+          <label for="repairRMCode">Neuer Einmalcode</label><input id="repairRMCode" type="text" placeholder="8 Zeichen" maxlength="8" autocomplete="off">
+          <div class="panel-actions"><button class="secondary" id="repairRMTest" type="button">Neu verbinden</button><button class="primary" id="repairRMApply" type="button" disabled>Neue Verbindung übernehmen</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="maintenance-grid">
+      <div class="maintenance-panel">
+        <h3>Dashboard-Passwort</h3>
+        <p class="muted">Wenn das Passwort vergessen wurde, kann es hier ersetzt werden. Alte Dashboard-Sitzungen verlieren danach automatisch ihre Gültigkeit.</p>
+        <label for="maintenanceNewPassword">Neues Passwort (mindestens 16 Zeichen)</label>
+        <div class="maintenance-password-row"><input id="maintenanceNewPassword" type="password" autocomplete="new-password" placeholder="Ein langes eigenes Passwort"><button class="ghost" id="maintenanceGeneratePassword" type="button">Erzeugen</button><button class="secondary" id="maintenancePasswordApply" type="button">Passwort ändern</button></div>
+      </div>
+      <div class="maintenance-panel safe-test">
+        <h3>Uploadfreier Wartungstest</h3>
+        <p class="muted">Prüft IServ → Fly → reMarkable → Dashboard, lädt aber keine Datei hoch und schaltet die Automatik nicht frei. Der Installer erzwingt vorübergehend den Testmodus und stellt danach deine vorherigen Einstellungen wieder her.</p>
+        <label for="maintenanceVerifyPassword">Aktuelles Dashboard-Passwort</label><input id="maintenanceVerifyPassword" type="password" autocomplete="current-password" placeholder="Dashboard-Passwort">
+        <div class="panel-actions"><button class="primary" id="maintenanceVerify" type="button">Sicheren Test starten</button></div>
+        <div id="maintenanceVerification" class="statusbox">Noch kein Wartungs-Test durchgeführt.</div>
+      </div>
+    </div>
+
+    <div class="maintenance-grid">
+      <div class="maintenance-panel">
+        <h3>Aktualisieren</h3>
+        <p class="muted">Aktualisiert Sync und Dashboard auf die Version dieses Installers. Ein separates Installer-Update wird nur nach Prüfsummenprüfung angeboten.</p>
+        <div class="panel-actions"><button class="secondary" id="maintenanceUpdate" type="button">Cloud-Komponenten aktualisieren</button><button class="ghost" id="appUpdateCheck" type="button">Installer-Update prüfen</button></div>
+      </div>
+      <div class="maintenance-panel danger-zone">
+        <h3 style="color:var(--danger)">Deinstallieren</h3>
+        <p class="muted">Entfernt Worker, KV und Fly-App dieser Installation. Bereits auf dem reMarkable vorhandene Dokumente werden nicht gelöscht.</p>
+        <label for="uninstallConfirm">Zur Bestätigung DELETE eingeben</label>
+        <div class="row"><input id="uninstallConfirm" type="text" autocomplete="off" placeholder="DELETE" style="max-width:220px"><button class="danger" id="maintenanceUninstall" type="button">Installation deinstallieren</button></div>
+      </div>
+    </div>
+
+    <div class="maintenance-panel" style="margin-top:14px">
+      <div class="row between">
+        <div>
+          <h3>Support & Diagnose</h3>
+          <p class="muted">Erstellt einen datenschutzfreundlichen Diagnosebericht für die Fehlersuche. Bekannte Passwörter, Tokens, Adressen, Benutzernamen und Dokumentpfade werden vor dem Export bestmöglich entfernt.</p>
+        </div>
+        <div class="panel-actions"><button class="secondary" id="maintenanceDiagnostics" type="button">Diagnosebericht erstellen</button><button class="ghost" id="maintenanceDiagnosticsOpen" type="button" disabled>Ordner öffnen</button></div>
+      </div>
+      <div id="maintenanceDiagnosticsStatus" class="statusbox">Noch kein Diagnosebericht erstellt.</div>
+    </div>
+    <div id="maintenanceStatus" class="statusbox maintenance-log">Bereit.</div>
+  </section>
+
+  <nav class="wizard-steps" id="steps" aria-label="Einrichtungsschritte"></nav>
+
+  <section class="card" data-page="1">
+    <h2>1. System prüfen</h2>
+    <p>Der Assistent prüft, ob dieser Entwicklungsstand auf deinem Rechner alles Nötige findet.</p>
+    <button class="primary" id="systemCheck">Systemprüfung starten</button>
+    <div id="systemResult"></div>
+    <details class="recovery-box" id="recoveryBox">
+      <summary>Schon eingerichtet? Bestehende Installation auf diesem Computer verbinden</summary>
+      <p class="muted">Wenn du den Computer gewechselt oder den Installer neu installiert hast, verbindest du hier dein vorhandenes Dashboard. Es werden keine neuen Fly- oder Cloudflare-Ressourcen erstellt.</p>
+      <div class="recovery-fields">
+        <div><label for="recoveryDashboardURL">Dashboard-Adresse</label><input id="recoveryDashboardURL" type="text" inputmode="url" placeholder="https://…workers.dev"></div>
+        <div><label for="recoveryPassword">Dashboard-Passwort</label><input id="recoveryPassword" type="password" autocomplete="current-password" placeholder="Dashboard-Passwort"></div>
+        <button class="secondary" id="recoveryConnect" type="button">Bestehende Installation verbinden</button>
+      </div>
+      <div class="recovery-note">Das Passwort wird nur für diese Wiederverbindung verwendet und nicht lokal gespeichert.</div>
+      <div id="recoveryStatus" class="statusbox hidden"></div>
+    </details>
+    <div class="success" style="margin-top:12px"><strong>Keine Entwicklerwerkzeuge nötig.</strong> Fly CLI und die Cloudflare-Laufzeit werden bei Bedarf automatisch aus offiziellen Quellen geladen und per SHA-256 geprüft. Der reMarkable-Helfer ist im fertigen Installationspaket enthalten.</div>
+    <h3>Kostenhinweis</h3>
+    <div class="checkline"><input id="costAccept" type="checkbox"><div><strong>Ich verstehe, dass Fly.io ein externer nutzungsbasierter Dienst ist und Kosten verursachen kann.</strong><br><span class="muted">Der Assistent erstellt genau eine kleine Sync-App und einen 1-GB-Speicher. Cloudflare wird für dieses Projekt im kostenlosen Workers-Setup verwendet. Preise und Bedingungen der Anbieter können sich ändern.</span></div></div>
+    <button class="secondary" id="saveCost" style="margin-top:10px">Kostenhinweis bestätigen</button> <span class="muted" style="margin-left:8px"><a href="https://fly.io/docs/about/pricing/" target="_blank" rel="noopener">Fly-Preise</a> · <a href="https://developers.cloudflare.com/workers/platform/pricing/" target="_blank" rel="noopener">Cloudflare-Preise</a></span>
+  </section>
+
+  <section class="card" data-page="2">
+    <h2>2. Cloud-Konten verbinden</h2>
+    <div class="grid2">
+      <div class="subcard">
+        <h3 style="margin-top:0">Fly.io</h3>
+        <p class="muted">Die Sync-Machine läuft in deinem eigenen Fly-Konto.</p>
+        <button class="secondary" id="flyLogin">Bei Fly.io anmelden</button>
+        <div id="flyCodePanel" class="fly-code hidden"><p><strong>Zeigt Fly.io „Hand this code back to your terminal“?</strong> Trage den angezeigten Code hier ein.</p><div class="fly-code-row"><div><label for="flyCode">Fly.io-Code</label><input id="flyCode" type="text" autocomplete="off" spellcheck="false"></div><button class="secondary" id="flyCodeSubmit" type="button">Code übernehmen</button></div><div id="flyCodeStatus" class="statusbox hidden"></div></div>
+        <div id="flyOrgPanel" class="hidden" style="margin-top:12px">
+          <label for="flyOrgSelect">Fly.io-Organisation</label>
+          <select id="flyOrgSelect"></select>
+          <p id="flyOrgHint" class="muted">Die App und ihre Kosten werden dieser Organisation zugeordnet.</p>
+        </div>
+        <div id="flyStatus" class="statusbox">Noch nicht geprüft.</div>
+      </div>
+      <div class="subcard"><h3 style="margin-top:0">Cloudflare</h3><p class="muted">Dashboard und Zeitplan laufen in deinem eigenen Cloudflare-Konto.</p><button class="secondary" id="cfLogin">Bei Cloudflare anmelden</button><div id="cfStatus" class="statusbox">Noch nicht geprüft.</div><p class="provider-prerequisite"><strong>Neues Cloudflare-Konto?</strong> Bestätige vor dem Fortfahren die E-Mail-Adresse über Cloudflares Bestätigungs-E-Mail. Im Installer muss dafür kein Code eingegeben werden.</p></div>
+    </div>
+  </section>
+
+  <section class="card" data-page="3">
+    <h2>3. IServ und reMarkable verbinden</h2>
+    <p class="muted">Hier werden nur die beiden Quelldienste verbunden. Die Ordnerwahl kommt danach auf einer gemeinsamen Verknüpfungsseite.</p>
+    <div class="grid2">
+      <div class="subcard">
+        <h3 style="margin-top:0">IServ</h3>
+        <label for="iservURL">WebDAV-Adresse</label><input id="iservURL" type="text" placeholder="https://webdav.deine-schule.de">
+        <label for="iservUser">Benutzername</label><input id="iservUser" type="text" autocomplete="username">
+        <label for="iservPassword">Passwort oder App-Passwort</label><input id="iservPassword" type="password" autocomplete="current-password">
+        <div class="row" style="margin-top:10px"><button class="secondary" id="iservConnect">IServ verbinden</button></div>
+        <div id="iservStatus" class="statusbox">Noch nicht verbunden.</div>
+        <p class="muted">Das Passwort wird nicht in der späteren Dashboard-Konfiguration gespeichert.</p>
+      </div>
+      <div class="subcard">
+        <h3 style="margin-top:0">reMarkable</h3>
+        <p>Öffne die offizielle Gerätefreigabe, erzeuge einen neuen einmaligen 8-Zeichen-Code und trage ihn hier ein.</p>
+        <button class="ghost" id="openRM">reMarkable-Freigabe öffnen</button>
+        <label for="rmCode">Einmalcode</label><input id="rmCode" type="text" placeholder="8 Zeichen" maxlength="8" autocomplete="off">
+        <button class="secondary" id="rmConnect" style="margin-top:10px">reMarkable verbinden</button>
+        <div id="rmStatus" class="statusbox">Noch nicht verbunden.</div>
+        <p class="muted">Der Assistent fragt nicht nach deinem reMarkable-Passwort.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" data-page="4" id="linkSection">
+    <h2>4. Ordner verknüpfen</h2>
+    <p class="muted">Jetzt liegen beide Ordnerbrowser direkt nebeneinander. Wähle links den IServ-Quellordner und rechts den reMarkable-Zielordner und verknüpfe beide mit einem Klick.</p>
+    <div class="link-workspace">
+      <div class="subcard">
+        <div class="row between"><h3 style="margin:0">IServ-Ordner</h3><button class="ghost" id="davUp">Eine Ebene hoch</button></div>
+        <div class="folder-path"><strong>Aktuell:</strong> <span id="davPath">/</span></div>
+        <div id="davStatus" class="statusbox">Verbinde zuerst IServ in Schritt 3.</div>
+        <div id="davList" class="folder-list"></div>
+        <button class="secondary" id="selectDav">Aktuellen IServ-Ordner auswählen</button>
+        <div class="selected"><strong>Ausgewählt:</strong><div id="selectedDav" class="folder-path">noch keiner</div></div>
+      </div>
+      <div class="subcard">
+        <div class="row between"><h3 style="margin:0">reMarkable-Ordner</h3><div class="row"><button class="ghost" id="rmUp">Eine Ebene hoch</button><button class="ghost" id="rmRefresh">Neu laden</button></div></div>
+        <div class="folder-path"><strong>Aktuell:</strong> <span id="rmPath">/</span></div>
+        <div id="rmBrowserStatus" class="statusbox">Verbinde zuerst reMarkable in Schritt 3.</div>
+        <div id="rmList" class="folder-list"></div>
+        <button class="secondary" id="selectRM" disabled>Aktuellen reMarkable-Ordner auswählen</button>
+        <div class="selected"><strong>Ausgewählt:</strong><div id="selectedRM" class="folder-path">noch keiner</div></div>
+      </div>
+    </div>
+    <div class="link-arrow">IServ-Quelle → reMarkable-Ziel</div>
+    <div class="row" style="justify-content:center"><button class="primary" id="createMapping">Ausgewählte Ordner verknüpfen</button><button class="ghost" id="clearSelection">Auswahl zurücksetzen</button></div>
+    <div id="mappingStatus" class="statusbox">Noch keine Verknüpfung erstellt.</div>
+    <h3>Deine Verknüpfungen</h3>
+    <div id="mappings"></div>
+  </section>
+
+  <section class="card" data-page="5">
+    <div class="section-head">
+      <div>
+        <h2>5. Zeitplan und Grenzen</h2>
+        <p class="muted">Lege pro Wochentag fest, wann automatische Synchronisation erlaubt ist. Tage ohne Zeitfenster bleiben automatisch inaktiv.</p>
+      </div>
+      <div id="scheduleSummary" class="mini-summary">0 aktive Tage · 0 Zeitfenster</div>
+    </div>
+    <div class="grid2 schedule-top">
+      <div class="subcard compact-card">
+        <div>
+          <label for="region">Fly-Region</label>
+          <input id="region" type="text" value="fra">
+        </div>
+        <p class="muted">Für den ersten Test bleibt Frankfurt voreingestellt.</p>
+      </div>
+      <div class="subcard compact-card">
+        <div>
+          <label for="interval">Innerhalb der Zeitfenster starten alle</label>
+          <select id="interval"><option>5</option><option selected>10</option><option>15</option><option>20</option><option>30</option><option>60</option></select>
+        </div>
+        <p class="muted">Damit laufen mehrere passende Ordner nacheinander an, ohne unnötig oft zu starten.</p>
+      </div>
+    </div>
+
+    <div class="schedule-shell">
+      <div class="schedule-sidebar">
+        <div class="sidebar-head">Wochentage</div>
+        <div id="dayButtons" class="day-list"></div>
+      </div>
+      <div class="schedule-editor">
+        <div class="editor-head">
+          <div>
+            <h3 id="activeDayTitle">Montag</h3>
+            <p id="activeDayHint" class="muted">Noch keine Zeitfenster eingerichtet.</p>
+          </div>
+          <div class="editor-actions">
+            <button class="secondary" id="addWindow">+ Zeitfenster</button>
+            <button class="ghost" id="toggleCopy">Auf andere Wochentage übertragen</button>
+          </div>
+        </div>
+        <div id="windows" class="window-stack"></div>
+        <div id="copyPanel" class="copy-panel hidden">
+          <strong>Zeiten von <span id="copySourceDay">Montag</span> übernehmen für:</strong>
+          <div id="copyDays" class="copydays"></div>
+          <button class="secondary" id="copyApply">Auswahl übernehmen</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2 tune-grid">
+      <div class="setting-card">
+        <label for="lookback">Nur Dateien der letzten Tage</label>
+        <input id="lookback" type="number" min="1" max="3650" value="30">
+        <p class="muted">Begrenzt die Dateisuche auf aktuelle Materialien und hält die Läufe schneller.</p>
+      </div>
+      <div class="setting-card">
+        <label for="maxFile">Maximale Dateigröße in MB</label>
+        <input id="maxFile" type="number" min="1" max="95" value="95">
+        <p class="muted">Schützt vor problematisch großen Dateien und bleibt im sicheren Bereich für reMarkable.</p>
+      </div>
+      <div class="setting-card">
+        <h3>Dateitypen</h3>
+        <div class="type-grid">
+          <label class="type-chip"><input id="pdf" type="checkbox" checked> PDF</label>
+          <label class="type-chip"><input id="epub" type="checkbox" checked> EPUB</label>
+        </div>
+      </div>
+      <div class="setting-card">
+        <label for="adminPassword">Dashboard-Passwort (mindestens 16 Zeichen)</label>
+        <div class="row"><input id="adminPassword" style="flex:1 1 260px" type="password" autocomplete="new-password" placeholder="Ein langes eigenes Passwort"><button class="secondary" type="button" id="generatePassword">Sicheres Passwort erzeugen</button><button class="ghost" type="button" id="togglePassword">Anzeigen</button></div>
+        <div class="password-note">Nimm ein eigenes langes Passwort, das du sonst nirgendwo verwendest.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" data-page="6">
+    <h2>6. Installieren</h2>
+    <p>Der Assistent richtet alles ein und führt danach automatisch einen <strong>reinen Testlauf ohne Upload</strong> durch. Die Automatik bleibt anschließend AUS, bis du sie im Dashboard bewusst aktivierst.</p>
+    <button class="primary" id="startInstall">Installation starten</button>
+    <div id="installStatus" class="statusbox">Noch nicht gestartet.</div>
+    <div id="installProgress" class="install-progress hidden">
+      <div class="progress-track"><div id="installProgressFill" class="progress-fill"></div></div>
+      <div class="progress-meta"><strong id="installPhase">Vorbereitung …</strong><span id="installPercent">0 %</span></div>
+    </div>
+    <details class="install-details"><summary>Technische Details anzeigen</summary><pre id="logs" class="logs">Noch keine Installationsmeldungen.</pre></details>
+    <div id="done" class="success hidden"><strong>Installation und Sicherheits-Test abgeschlossen.</strong><br><span id="verificationText">Der Testmodus hat die Verbindung geprüft, ohne Dateien hochzuladen.</span><br><button class="primary" id="openDashboard" style="margin-top:10px">Dashboard öffnen</button></div>
+  </section>
+
+  <div class="wizard-footer" id="wizardFooter">
+    <button class="ghost" id="prevStep" type="button">Zurück</button>
+    <div class="wizard-position" id="wizardPosition">Schritt 1 von 6</div>
+    <button class="primary" id="nextStep" type="button">Weiter</button>
+  </div>
+</main>
+<script nonce="__CSP_NONCE__">
+const TOKEN="__SETUP_TOKEN__";
+history.replaceState(null,"",location.pathname);
+let LANG=localStorage.getItem("iservRmLang")||((navigator.language||"").toLowerCase().startsWith("en")?"en":"de");
+const TXT={
+  system:{de:"System",en:"System"},cloud:{de:"Cloud",en:"Cloud"},services:{de:"Dienste",en:"Services"},folders:{de:"Ordner",en:"Folders"},schedule:{de:"Zeitplan",en:"Schedule"},installation:{de:"Installation",en:"Installation"},
+  next:{de:"Weiter",en:"Continue"},toInstall:{de:"Zur Installation",en:"Go to installation"},back:{de:"Zurück",en:"Back"},
+  notChecked:{de:"Noch nicht geprüft.",en:"Not checked yet."},connected:{de:"Verbunden",en:"Connected"},preparing:{de:"Werkzeuge werden vorbereitet …",en:"Preparing tools …"},
+  folderOpening:{de:"Ordner wird geöffnet …",en:"Opening folder …"},folderOpen:{de:"Ordner geöffnet.",en:"Folder opened."},rootOpen:{de:"Hauptordner geöffnet.",en:"Root folder opened."},noSub:{de:"Keine Unterordner.",en:"No subfolders."},
+  selectSource:{de:"IServ-Quelle ausgewählt.",en:"IServ source selected."},selectTarget:{de:"reMarkable-Ziel ausgewählt.",en:"reMarkable destination selected."},none:{de:"noch keiner",en:"none"},
+  inactive:{de:"inaktiv",en:"inactive"},window:{de:"Zeitfenster",en:"Time window"},from:{de:"Von",en:"From"},to:{de:"Bis",en:"To"},remove:{de:"Entfernen",en:"Remove"},
+  monday:{de:"Montag",en:"Monday"},tuesday:{de:"Dienstag",en:"Tuesday"},wednesday:{de:"Mittwoch",en:"Wednesday"},thursday:{de:"Donnerstag",en:"Thursday"},friday:{de:"Freitag",en:"Friday"},saturday:{de:"Samstag",en:"Saturday"},sunday:{de:"Sonntag",en:"Sunday"},
+  runInstall:{de:"Installation läuft …",en:"Installation is running …"},resumeInstall:{de:"Installation fortsetzen",en:"Continue installation"},installOK:{de:"Installation erfolgreich abgeschlossen.",en:"Installation completed successfully."},installFail:{de:"Installation fehlgeschlagen.",en:"Installation failed."},
+  needSystem:{de:"Führe zuerst die Systemprüfung erfolgreich aus und bestätige den Kostenhinweis.",en:"Complete the system check and confirm the cost notice first."},needCloud:{de:"Verbinde zuerst Fly.io und Cloudflare.",en:"Connect Fly.io and Cloudflare first."},needServices:{de:"Verbinde zuerst IServ und reMarkable.",en:"Connect IServ and reMarkable first."},needMapping:{de:"Erstelle mindestens eine Ordnerverknüpfung.",en:"Create at least one folder mapping."},needConfig:{de:"Wähle mindestens einen Dateityp und verwende ein Dashboard-Passwort mit mindestens 16 Zeichen.",en:"Select at least one file type and use a dashboard password with at least 16 characters."}
+};
+const t=k=>TXT[k]?.[LANG]??k;
+const staticEN=new Map([
+["Neues Cloudflare-Konto?","New Cloudflare account?"],["Bestätige vor dem Fortfahren die E-Mail-Adresse über Cloudflares Bestätigungs-E-Mail. Im Installer muss dafür kein Code eingegeben werden.","Before continuing, verify the email address using Cloudflare's verification email. No code needs to be entered in the installer."],
+["Einrichtungsassistent · verbinden, Ordner verknüpfen, Zeitplan festlegen, fertig","Setup assistant · connect, link folders, set a schedule, done"],["Setup beenden","Close setup"],["1. System prüfen","1. Check system"],["Der Assistent prüft, ob dieser Entwicklungsstand auf deinem Rechner alles Nötige findet.","The assistant checks whether your computer is ready."],["Systemprüfung starten","Run system check"],["Schon eingerichtet? Bestehende Installation auf diesem Computer verbinden","Already set up? Connect the existing installation on this computer"],["Wenn du den Computer gewechselt oder den Installer neu installiert hast, verbindest du hier dein vorhandenes Dashboard. Es werden keine neuen Fly- oder Cloudflare-Ressourcen erstellt.","If you changed computers or reinstalled the setup app, connect your existing dashboard here. No new Fly or Cloudflare resources are created."],["Dashboard-Adresse","Dashboard address"],["Dashboard-Passwort","Dashboard password"],["Bestehende Installation verbinden","Connect existing installation"],["Das Passwort wird nur für diese Wiederverbindung verwendet und nicht lokal gespeichert.","The password is used only for this reconnection and is not stored locally."],["Keine Entwicklerwerkzeuge nötig.","No developer tools required."],["Fly CLI und die Cloudflare-Laufzeit werden bei Bedarf automatisch aus offiziellen Quellen geladen und per SHA-256 geprüft. Der reMarkable-Helfer ist im fertigen Installationspaket enthalten.","Fly CLI and the Cloudflare runtime are downloaded from official sources when needed and verified with SHA-256. The reMarkable helper is bundled with the finished installer."],["Kostenhinweis","Cost notice"],["Ich verstehe, dass Fly.io ein externer nutzungsbasierter Dienst ist und Kosten verursachen kann.","I understand that Fly.io is an external usage-based service and may incur charges."],["Der Assistent erstellt genau eine kleine Sync-App und einen 1-GB-Speicher. Cloudflare wird für dieses Projekt im kostenlosen Workers-Setup verwendet. Preise und Bedingungen der Anbieter können sich ändern.","The assistant creates exactly one small sync app and 1 GB of storage. Cloudflare uses its free Workers setup for this project. Provider prices and terms may change."],["Kostenhinweis bestätigen","Confirm cost notice"],["Fly-Preise","Fly pricing"],["Cloudflare-Preise","Cloudflare pricing"],["Vorhandene Installation verwalten","Manage existing installation"],["Diese Installation kann geprüft, aktualisiert oder vollständig aus den Cloud-Konten entfernt werden.","Check, update, or completely remove this installation from your cloud accounts."],["Installiert","Installed"],["Installation","Installation"],["Öffne das Dashboard oder prüfe, ob Dashboard und Fly-Sync erreichbar sind.","Open the dashboard or check whether the dashboard and Fly sync are reachable."],["Dashboard öffnen","Open dashboard"],["Installation prüfen","Check installation"],["Aktualisieren","Update"],["Cloud-Komponenten und der lokale Installer lassen sich getrennt aktualisieren.","Cloud components and the local installer can be updated separately."],["Cloud-Komponenten aktualisieren","Update cloud components"],["Installer-Update prüfen","Check installer update"],["Deinstallieren","Uninstall"],["Entfernt Worker, KV und Fly-App dieser Installation. Bereits auf dem reMarkable vorhandene Dokumente werden nicht gelöscht.","Removes the Worker, KV storage, and Fly app for this installation. Documents already on the reMarkable are not deleted."],["Installation deinstallieren","Uninstall installation"],["Bereit.","Ready."],["Support & Diagnose","Support & diagnostics"],["Erstellt einen datenschutzfreundlichen Diagnosebericht für die Fehlersuche. Passwörter, Tokens, IServ-Benutzername, IServ-Adresse, Dashboard-Adresse und Dokumentnamen werden nicht in den Bericht aufgenommen.","Creates a privacy-friendly diagnostic report for troubleshooting. Passwords, tokens, IServ username, IServ address, dashboard address, and document names are not included in the report."],["Diagnosebericht erstellen","Create diagnostic report"],["Ordner öffnen","Open folder"],["Noch kein Diagnosebericht erstellt.","No diagnostic report has been created yet."],["2. Cloud-Konten verbinden","2. Connect cloud accounts"],["Die Sync-Machine läuft in deinem eigenen Fly-Konto.","The sync machine runs in your own Fly account."],["Bei Fly.io anmelden","Sign in to Fly.io"],["Dashboard und Zeitplan laufen in deinem eigenen Cloudflare-Konto.","The dashboard and schedule run in your own Cloudflare account."],["Bei Cloudflare anmelden","Sign in to Cloudflare"],["3. IServ und reMarkable verbinden","3. Connect IServ and reMarkable"],["Hier werden nur die beiden Quelldienste verbunden. Die Ordnerwahl kommt danach auf einer gemeinsamen Verknüpfungsseite.","Connect both services here. Folder selection comes next on one shared linking page."],["WebDAV-Adresse","WebDAV address"],["Benutzername","Username"],["Passwort oder App-Passwort","Password or app password"],["IServ verbinden","Connect IServ"],["Noch nicht verbunden.","Not connected yet."],["Das Passwort wird nicht in der späteren Dashboard-Konfiguration gespeichert.","The password is not stored in the later dashboard configuration."],["Öffne die offizielle Gerätefreigabe, erzeuge einen neuen einmaligen 8-Zeichen-Code und trage ihn hier ein.","Open the official device connection page, create a new one-time 8-character code and enter it here."],["reMarkable-Freigabe öffnen","Open reMarkable connection"],["Einmalcode","One-time code"],["reMarkable verbinden","Connect reMarkable"],["Der Assistent fragt nicht nach deinem reMarkable-Passwort.","The assistant never asks for your reMarkable password."],["4. Ordner verknüpfen","4. Link folders"],["Jetzt liegen beide Ordnerbrowser direkt nebeneinander. Wähle links den IServ-Quellordner und rechts den reMarkable-Zielordner und verknüpfe beide mit einem Klick.","Both folder browsers are side by side. Select the IServ source on the left and the reMarkable destination on the right, then link them with one click."],["IServ-Ordner","IServ folder"],["reMarkable-Ordner","reMarkable folder"],["Eine Ebene hoch","Up one level"],["Neu laden","Reload"],["Aktuell:","Current:"],["Ausgewählt:","Selected:"],["Aktuellen IServ-Ordner auswählen","Select current IServ folder"],["Aktuellen reMarkable-Ordner auswählen","Select current reMarkable folder"],["Ausgewählte Ordner verknüpfen","Link selected folders"],["Auswahl zurücksetzen","Clear selection"],["Deine Verknüpfungen","Your mappings"],["5. Zeitplan und Grenzen","5. Schedule and limits"],["Lege pro Wochentag fest, wann automatische Synchronisation erlaubt ist. Tage ohne Zeitfenster bleiben automatisch inaktiv.","Choose when automatic sync is allowed for each weekday. Days without time windows remain inactive."],["Fly-Region","Fly region"],["Für den ersten Test bleibt Frankfurt voreingestellt.","Frankfurt is preselected for the first setup."],["Innerhalb der Zeitfenster starten alle","Within time windows start every"],["Damit laufen mehrere passende Ordner nacheinander an, ohne unnötig oft zu starten.","This lets matching folders run in sequence without starting unnecessarily often."],["Wochentage","Weekdays"],["+ Zeitfenster","+ Time window"],["Auf andere Wochentage übertragen","Copy to other weekdays"],["Auswahl übernehmen","Apply selection"],["Nur Dateien der letzten Tage","Only files from the last days"],["Begrenzt die Dateisuche auf aktuelle Materialien und hält die Läufe schneller.","Limits the scan to recent materials and keeps runs faster."],["Maximale Dateigröße in MB","Maximum file size in MB"],["Schützt vor problematisch großen Dateien und bleibt im sicheren Bereich für reMarkable.","Avoids problematic large files and stays within the safe reMarkable range."],["Dateitypen","File types"],["Dashboard-Passwort (mindestens 16 Zeichen)","Dashboard password (at least 16 characters)"],["Sicheres Passwort erzeugen","Generate secure password"],["Anzeigen","Show"],["Nimm ein eigenes langes Passwort, das du sonst nirgendwo verwendest.","Use a long unique password that you do not use anywhere else."],["6. Installieren","6. Install"],["Installation starten","Start installation"],["Noch nicht gestartet.","Not started yet."],["Noch keine Installationsmeldungen.","No installation messages yet."],["Installation und Sicherheits-Test abgeschlossen.","Installation and safety test completed."],["Der Testmodus hat die Verbindung geprüft, ohne Dateien hochzuladen.","Test mode verified the connection without uploading files."],["Dashboard öffnen","Open dashboard"],["Bestehende Installation","Existing installation"],["Öffnen, prüfen, aktualisieren oder vollständig entfernen. reMarkable-Dokumente werden bei einer Deinstallation nicht gelöscht.","Open, check, update or remove the installation. Documents already on reMarkable are not deleted during uninstall."],["Installation prüfen","Check installation"],["Cloud-Software aktualisieren","Update cloud software"],["Installer-Update prüfen","Check installer update"],["Bereit.","Ready."],["Installation entfernen","Remove installation"],["Endgültig deinstallieren","Uninstall permanently"],
+["Prüfen, reparieren, sicher testen, aktualisieren oder vollständig entfernen – ohne Terminal.","Check, repair, safely test, update, or completely remove it — without a terminal."],
+["Systemzustand","System health"],
+["Eine lokale Prüfung kontrolliert Dashboard und Fly-App, ohne Dateien zu verändern.","A local check verifies the dashboard and Fly app without changing any files."],
+["Jetzt prüfen","Check now"],
+["Fly.io neu verbinden","Reconnect Fly.io"],
+["Cloudflare neu verbinden","Reconnect Cloudflare"],
+["Cloud-Anmeldungen können hier unabhängig erneuert werden.","Cloud sign-ins can be renewed independently here."],
+["noch nicht geprüft","not checked yet"],
+["lokal","local"],
+["Verbindungen reparieren","Repair connections"],
+["Neue Zugangsdaten werden erst getestet und danach über deine Fly.io-Verbindung als geheime Cloud-Einstellungen übernommen. Sie werden nicht dauerhaft im Installer gespeichert.","New credentials are tested first and then applied as protected cloud secrets through your Fly.io connection. They are not permanently stored by the installer."],
+["Neue Zugangsdaten können hier geprüft werden.","New credentials can be tested here."],
+["Verbindung testen","Test connection"],
+["Neue Zugangsdaten übernehmen","Apply new credentials"],
+["Bei abgelaufener Autorisierung einfach neu verbinden.","Reconnect here if the authorization has expired."],
+["Neuer Einmalcode","New one-time code"],
+["Neu verbinden","Reconnect"],
+["Neue Verbindung übernehmen","Apply new connection"],
+["Dashboard-Passwort","Dashboard password"],
+["Wenn das Passwort vergessen wurde, kann es hier ersetzt werden. Alte Dashboard-Sitzungen verlieren danach automatisch ihre Gültigkeit.","If the password was forgotten, it can be replaced here. Existing dashboard sessions automatically become invalid."],
+["Neues Passwort (mindestens 16 Zeichen)","New password (at least 16 characters)"],
+["Erzeugen","Generate"],
+["Passwort ändern","Change password"],
+["Uploadfreier Wartungstest","No-upload maintenance test"],
+["Prüft IServ → Fly → reMarkable → Dashboard, lädt aber keine Datei hoch und schaltet die Automatik nicht frei. Der Installer erzwingt vorübergehend den Testmodus und stellt danach deine vorherigen Einstellungen wieder her.","Checks IServ → Fly → reMarkable → Dashboard, but uploads no files and does not unlock automation. The installer temporarily forces test mode and restores your previous settings afterwards."],
+["Aktuelles Dashboard-Passwort","Current dashboard password"],
+["Sicheren Test starten","Run safe test"],
+["Noch kein Wartungs-Test durchgeführt.","No maintenance test has been run yet."],
+["Aktualisiert Sync und Dashboard auf die Version dieses Installers. Ein separates Installer-Update wird nur nach Prüfsummenprüfung angeboten.","Updates sync and dashboard to the version bundled with this installer. A separate installer update is offered only after checksum verification."],
+["Zur Bestätigung DELETE eingeben","Type DELETE to confirm"],
+["Sync-Machine","Sync machine"],
+["Vorbereitung …","Preparing …"],
+["Technische Details anzeigen","Show technical details"],
+["Erstellt einen datenschutzfreundlichen Diagnosebericht für die Fehlersuche. Bekannte Passwörter, Tokens, Adressen, Benutzernamen und Dokumentpfade werden vor dem Export bestmöglich entfernt.","Creates a privacy-friendly diagnostic report for troubleshooting. Known passwords, tokens, addresses, usernames, and document paths receive best-effort redaction before export."]
+]);
+for(const [de,en] of [["Zeigt Fly.io „Hand this code back to your terminal“?","Does Fly.io show “Hand this code back to your terminal”?"],["Trage den angezeigten Code hier ein.","Enter the displayed code here."],["Fly.io-Code","Fly.io code"],["Code übernehmen","Submit code"],["Fly.io-Organisation","Fly.io organization"],["Die App und ihre Kosten werden dieser Organisation zugeordnet.","The app and its charges will belong to this organization."]])staticEN.set(de,en);
+const originalText=new WeakMap();
+function translateStatic(){document.documentElement.lang=LANG;document.querySelectorAll("body *:not(script):not(style)").forEach(el=>{for(const node of el.childNodes){if(node.nodeType!==Node.TEXT_NODE)continue;const raw=(originalText.get(node)??node.nodeValue);if(!originalText.has(node))originalText.set(node,raw);const trimmed=raw.trim();if(!trimmed)continue;if(LANG==="en"&&staticEN.has(trimmed)){node.nodeValue=raw.replace(trimmed,staticEN.get(trimmed))}else node.nodeValue=raw}});$("#langDE")?.classList.toggle("active",LANG==="de");$("#langEN")?.classList.toggle("active",LANG==="en");const placeholders=[["#adminPassword","A long unique password","Ein langes eigenes Passwort"],["#maintenanceNewPassword","A long unique password","Ein langes eigenes Passwort"],["#maintenanceVerifyPassword","Dashboard password","Dashboard-Passwort"],["#recoveryDashboardURL","https://…workers.dev","https://…workers.dev"],["#recoveryPassword","Dashboard password","Dashboard-Passwort"],["#repairIServURL","https://webdav.your-school.example","https://webdav.deine-schule.de"],["#repairRMCode","8 characters","8 Zeichen"]];placeholders.forEach(([q,en,de])=>{const el=$(q);if(el)el.placeholder=LANG==="en"?en:de});const uc=$("#uninstallConfirm");if(uc)uc.placeholder="DELETE";}
+function setLang(l){LANG=l;localStorage.setItem("iservRmLang",l);translateStatic();$("#flyCode").placeholder=LANG==="en"?"Code shown by Fly.io":"Von Fly.io angezeigter Code";$("#maintenanceFlyCode").placeholder=LANG==="en"?"Code shown by Fly.io":"Von Fly.io angezeigter Code";renderFlyOrganizations(flyOrganizations,$("#flyOrgSelect").value);renderSteps();renderDays();renderWindows();renderCopy();}
+const dayNames={1:"Mo",2:"Di",3:"Mi",4:"Do",5:"Fr",6:"Sa",7:"So"};
+const dayLong=()=>({1:t("monday"),2:t("tuesday"),3:t("wednesday"),4:t("thursday"),5:t("friday"),6:t("saturday"),7:t("sunday")});
+let schedule={"1":[{start:"07:30",end:"12:50"},{start:"13:30",end:"15:10"}],"2":[{start:"07:30",end:"12:50"},{start:"13:30",end:"15:10"}],"3":[{start:"07:30",end:"12:50"},{start:"13:30",end:"15:10"}],"4":[{start:"07:30",end:"12:50"},{start:"13:30",end:"15:10"}],"5":[{start:"07:30",end:"12:50"},{start:"13:30",end:"15:10"}],"6":[],"7":[]};
+let activeDay=1,sources=[],davCurrent="",davDirectories=[],davConnected=false,selectedDav="",rmCurrent="/",rmDirectories=[],rmConnected=false,selectedRM="",rmLoading=false,rmFolderConfirmed=false;
+let systemPassed=false,costAccepted=false,flyConnected=false,cfConnected=false,flyOrganizations=[];
+const $=s=>document.querySelector(s);
+async function api(path,method="GET",body){const r=await fetch(path,{method,headers:{"X-Setup-Token":TOKEN,"X-Setup-Lang":LANG,...(body?{"Content-Type":"application/json"}:{})},body:body?JSON.stringify(body):undefined});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);return data}
+function status(el,text,kind=""){el.textContent=text;el.className="statusbox "+kind}
+function busy(button,on){if(button)button.disabled=on}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+const stepLabels=()=>({1:t("system"),2:t("cloud"),3:t("services"),4:t("folders"),5:t("schedule"),6:t("installation")});
+let currentStep=1;
+function renderSteps(){const labels=stepLabels();$("#steps").innerHTML=Object.entries(labels).map(([n,label])=>`<button type="button" class="step-nav ${Number(n)===currentStep?"active":""} ${Number(n)<currentStep?"visited":""}" data-step="${n}" aria-label="${n}. ${esc(label)}"><span class="step-num">${n}</span><span class="step-label">${label}</span></button>`).join("");document.querySelectorAll(".step-nav").forEach(b=>b.addEventListener("click",()=>{const n=Number(b.dataset.step);if(n<=currentStep)showStep(n);else tryAdvance(n)}));}
+function showStep(step,scroll=true){currentStep=Math.max(1,Math.min(6,step));document.querySelectorAll("section[data-page]").forEach(section=>section.classList.toggle("step-hidden",Number(section.dataset.page)!==currentStep));renderSteps();$("#wizardPosition").textContent=`${LANG==="en"?"Step":"Schritt"} ${currentStep} ${LANG==="en"?"of":"von"} 6 · ${stepLabels()[currentStep]}`;$("#prevStep").disabled=currentStep===1;$("#nextStep").style.visibility=currentStep===6?"hidden":"visible";$("#nextStep").textContent=currentStep===5?t("toInstall"):t("next");$("#prevStep").textContent=t("back");if(scroll)window.scrollTo({top:0,behavior:"smooth"})}
+function gateFor(step){if(step>=2&&(!systemPassed||!costAccepted))return t("needSystem");if(step>=3&&(!flyConnected||!cfConnected))return t("needCloud");if(step>=3&&flyOrganizations.length&&!$("#flyOrgSelect").value)return LANG==="en"?"Choose the Fly.io organization that will own the installation.":"Wähle die Fly.io-Organisation für diese Installation.";if(step>=4&&(!davConnected||!rmConnected))return t("needServices");if(step>=5&&sources.length<1)return t("needMapping");if(step>=6&&($("#adminPassword").value.length<16||(!$("#pdf").checked&&!$("#epub").checked)))return t("needConfig");return ""}
+function tryAdvance(target){const err=gateFor(target);if(err){alert(err);return}showStep(target)}
+$("#prevStep").addEventListener("click",()=>showStep(currentStep-1));$("#nextStep").addEventListener("click",()=>tryAdvance(currentStep+1));
+$("#langDE").addEventListener("click",()=>setLang("de"));$("#langEN").addEventListener("click",()=>setLang("en"));$("#quitSetup").addEventListener("click",()=>api("/api/app/quit","POST").then(()=>window.close()).catch(()=>{}));
+
+$("#systemCheck").addEventListener("click",async()=>{const b=$("#systemCheck");busy(b,true);try{const d=await api("/api/system/check","POST");systemPassed=Boolean(d.ok);const items=[[LANG==="en"?"Operating system":"Betriebssystem",d.platform?.message],["Fly.io",d.fly?.message],["Cloudflare",d.cloudflare?.message],["Node.js",d.node?.message],["reMarkable",d.remarquee?.message]];$("#systemResult").innerHTML=`<div class="statusbox ${systemPassed?"ok":"warn"}" style="margin-top:10px"><strong>${systemPassed?(LANG==="en"?"System check successful.":"Systemprüfung erfolgreich."):(LANG==="en"?"System check needs attention.":"Systemprüfung benötigt Aufmerksamkeit.")}</strong><br>${systemPassed?(LANG==="en"?"Everything required can be provided automatically.":"Alles Nötige kann automatisch bereitgestellt werden."):(LANG==="en"?"Check the items below.":"Prüfe die Hinweise unten.")}</div><div class="tools" style="margin-top:10px">${items.map(x=>`<div class="tool"><strong>${x[0]}</strong><br><span class="muted">${esc(x[1]||"—")}</span></div>`).join("")}</div>`}catch(e){$("#systemResult").innerHTML=`<div class="statusbox error">${esc(e.message)}</div>`}finally{busy(b,false)}});
+$("#saveCost").addEventListener("click",async()=>{try{if(!$("#costAccept").checked)throw new Error(LANG==="en"?"Please confirm the cost notice.":"Bitte bestätige den Kostenhinweis.");await api("/api/cost/accept","POST",{accepted:true});costAccepted=true;status($("#systemResult"),LANG==="en"?"Cost notice confirmed.":"Kostenhinweis bestätigt.","ok")}catch(e){status($("#systemResult"),e.message,"error")}});
+function renderFlyOrganizations(organizations=[],selected=""){flyOrganizations=Array.isArray(organizations)?organizations.filter(o=>o&&o.slug&&o.name):[];const panel=$("#flyOrgPanel"),select=$("#flyOrgSelect");if(!flyOrganizations.length){select.innerHTML="";panel.classList.add("hidden");return}const needsChoice=!selected;select.innerHTML=`<option value="">${LANG==="en"?"Choose organization":"Organisation wählen"}</option>`+flyOrganizations.map(o=>`<option value="${esc(o.slug)}">${esc(o.name)} (${esc(o.slug)})</option>`).join("");if(selected&&flyOrganizations.some(o=>o.slug===selected))select.value=selected;else select.value="";select.disabled=flyOrganizations.length===1;$("#flyOrgHint").textContent=flyOrganizations.length===1?(LANG==="en"?"This is the only organization available to the signed-in account.":"Dies ist die einzige verfügbare Organisation des angemeldeten Kontos."):(needsChoice?(LANG==="en"?"Choose deliberately: the app and its charges will belong to this organization.":"Wähle bewusst: App und Kosten werden dieser Organisation zugeordnet."):(LANG==="en"?"The app and its charges will belong to the selected organization.":"App und Kosten werden der ausgewählten Organisation zugeordnet."));panel.classList.remove("hidden")}
+$("#flyLogin").addEventListener("click",async()=>{const b=$("#flyLogin");flyConnected=false;renderFlyOrganizations();busy(b,true);$("#flyCodePanel").classList.remove("hidden");$("#flyCode").placeholder=LANG==="en"?"Code shown by Fly.io":"Von Fly.io angezeigter Code";status($("#flyStatus"),LANG==="en"?"Complete sign-in in the Fly.io page. If it shows a code, enter it above.":"Schließe die Anmeldung auf der Fly.io-Seite ab. Falls dort ein Code erscheint, trage ihn oben ein.");try{const d=await api("/api/fly/login","POST",{force:true});flyConnected=true;renderFlyOrganizations(d.organizations,d.selected_org);$("#flyCodePanel").classList.add("hidden");$("#flyCode").value="";status($("#flyStatus"),t("connected")+": "+d.account,"ok")}catch(e){$("#flyCodePanel").classList.add("hidden");status($("#flyStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#flyCodeSubmit").addEventListener("click",async()=>{const b=$("#flyCodeSubmit"),code=$("#flyCode").value.trim();$("#flyCodeStatus").classList.remove("hidden");if(!code){status($("#flyCodeStatus"),LANG==="en"?"Enter the code shown by Fly.io.":"Trage den von Fly.io angezeigten Code ein.","warn");return}busy(b,true);status($("#flyCodeStatus"),LANG==="en"?"Submitting code …":"Code wird übermittelt …");try{await api("/api/fly/code","POST",{code});$("#flyCode").value="";status($("#flyCodeStatus"),LANG==="en"?"Code accepted. Confirming sign-in …":"Code akzeptiert. Anmeldung wird bestätigt …","ok")}catch(e){status($("#flyCodeStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#flyCode").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();$("#flyCodeSubmit").click()}});
+$("#cfLogin").addEventListener("click",async()=>{const b=$("#cfLogin");cfConnected=false;busy(b,true);status($("#cfStatus"),t("preparing"));try{const d=await api("/api/cloudflare/login","POST",{force:true});cfConnected=true;status($("#cfStatus"),(LANG==="en"?"Cloudflare connected":"Cloudflare verbunden")+": "+d.account,"ok")}catch(e){status($("#cfStatus"),e.message,"error")}finally{busy(b,false)}});
+
+async function loadDav(path){const nextPath=path||"";status($("#davStatus"),t("folderOpening"));try{const d=await api("/api/iserv/list","POST",{path:nextPath});davCurrent=nextPath;davDirectories=d.directories||[];$("#davPath").textContent="/"+davCurrent;renderDav();status($("#davStatus"),davCurrent?t("folderOpen"):t("rootOpen"),"ok")}catch(e){status($("#davStatus"),e.message,"error");throw e}}
+function renderDav(){$("#davList").innerHTML=davDirectories.length?davDirectories.map((p,i)=>`<button class="folder-btn" data-i="${i}"><span class="folder-glyph" aria-hidden="true"></span>${esc(p.split('/').pop())}</button>`).join(""):`<div class="muted">${t("noSub")}</div>`;document.querySelectorAll("#davList .folder-btn").forEach(b=>b.addEventListener("click",()=>loadDav(davDirectories[Number(b.dataset.i)]).catch(()=>{})))}
+$("#iservConnect").addEventListener("click",async()=>{const b=$("#iservConnect");busy(b,true);status($("#iservStatus"),LANG==="en"?"Checking connection …":"Verbindung wird geprüft …");try{const d=await api("/api/iserv/connect","POST",{URL:$("#iservURL").value,User:$("#iservUser").value,Password:$("#iservPassword").value});davConnected=true;davDirectories=d.directories||[];davCurrent="";$("#davPath").textContent="/";renderDav();status($("#davStatus"),t("rootOpen"),"ok");status($("#iservStatus"),LANG==="en"?"IServ connected successfully.":"IServ erfolgreich verbunden.","ok")}catch(e){status($("#iservStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#davUp").addEventListener("click",()=>{if(!davConnected)return;const parts=davCurrent.split('/').filter(Boolean);parts.pop();loadDav(parts.join('/')).catch(()=>{})});$("#selectDav").addEventListener("click",()=>{if(!davConnected){status($("#davStatus"),t("needServices"),"warn");return}if(!davCurrent){status($("#davStatus"),LANG==="en"?"Select an IServ subfolder as the source.":"Wähle einen IServ-Unterordner als Quelle.","warn");return}selectedDav=davCurrent;$("#selectedDav").textContent="/"+selectedDav;status($("#davStatus"),t("selectSource"),"ok")});
+$("#openRM").addEventListener("click",()=>window.open("https://my.remarkable.com/device/browser/connect","_blank","noopener"));
+function setRMLoading(on){rmLoading=on;["#rmUp","#rmRefresh"].forEach(q=>busy($(q),on));busy($("#selectRM"),on||!rmFolderConfirmed);document.querySelectorAll("#rmList .folder-btn").forEach(b=>busy(b,on))}
+async function loadRM(path,refresh=false){if(rmLoading)return;const next=path||"/";rmFolderConfirmed=false;setRMLoading(true);status($("#rmBrowserStatus"),refresh?(LANG==="en"?"Reloading reMarkable folder tree … The first load can take several minutes for a large library.":"reMarkable-Ordnerbaum wird neu geladen … Das erste Laden kann bei einer großen Bibliothek mehrere Minuten dauern."):(LANG==="en"?"Loading reMarkable folders … The first load can take several minutes for a large library.":"reMarkable-Ordner werden geladen … Das erste Laden kann bei einer großen Bibliothek mehrere Minuten dauern."));try{const d=await api("/api/remarkable/list","POST",{path:next,refresh});rmFolderConfirmed=true;rmCurrent=d.path||next;rmDirectories=d.directories||[];$("#rmPath").textContent=rmCurrent;renderRM();status($("#rmBrowserStatus"),t("folderOpen"),"ok")}catch(e){status($("#rmBrowserStatus"),e.message,"error");throw e}finally{setRMLoading(false)}}
+function renderRM(){$("#rmList").innerHTML=rmDirectories.length?rmDirectories.map((p,i)=>`<button class="folder-btn" data-i="${i}" ${rmLoading?"disabled":""}><span class="folder-glyph" aria-hidden="true"></span>${esc(p.split('/').filter(Boolean).pop()||'/')}</button>`).join(""):`<div class="muted">${t("noSub")}</div>`;document.querySelectorAll("#rmList .folder-btn").forEach(b=>b.addEventListener("click",()=>loadRM(rmDirectories[Number(b.dataset.i)]).catch(()=>{})))}
+$("#rmConnect").addEventListener("click",async()=>{const b=$("#rmConnect");let connectedNow=false;busy(b,true);status($("#rmStatus"),LANG==="en"?"Using one-time code …":"Code wird eingelöst …");try{await api("/api/remarkable/connect","POST",{code:$("#rmCode").value});rmConnected=true;connectedNow=true;status($("#rmStatus"),LANG==="en"?"reMarkable connected successfully.":"reMarkable erfolgreich verbunden.","ok");$("#rmCode").value=""}catch(e){status($("#rmStatus"),e.message,"error")}finally{busy(b,false)}if(connectedNow)loadRM("/").catch(()=>{})});$("#rmUp").addEventListener("click",()=>{if(!rmConnected||rmLoading||rmCurrent==="/")return;const parts=rmCurrent.split('/').filter(Boolean);parts.pop();loadRM(parts.length?"/"+parts.join('/'):"/").catch(()=>{})});$("#rmRefresh").addEventListener("click",()=>{if(!rmConnected||rmLoading)return;loadRM(rmCurrent,true).catch(()=>{})});$("#selectRM").addEventListener("click",()=>{if(!rmConnected||rmLoading||!rmFolderConfirmed)return;selectedRM=rmCurrent;$("#selectedRM").textContent=selectedRM;status($("#rmBrowserStatus"),t("selectTarget"),"ok")});
+function clearSelected(){selectedDav="";selectedRM="";$("#selectedDav").textContent=t("none");$("#selectedRM").textContent=t("none")}
+$("#clearSelection").addEventListener("click",()=>{clearSelected();status($("#mappingStatus"),LANG==="en"?"Selection cleared.":"Auswahl zurückgesetzt.")});$("#createMapping").addEventListener("click",()=>{if(!selectedDav||!selectedRM){status($("#mappingStatus"),LANG==="en"?"Choose an IServ source and a reMarkable destination first.":"Wähle zuerst links eine IServ-Quelle und rechts ein reMarkable-Ziel.","warn");return}const existing=sources.findIndex(s=>s.iserv_path===selectedDav);if(existing>=0){status($("#mappingStatus"),LANG==="en"?"This IServ folder is already linked.":"Dieser IServ-Ordner ist bereits verknüpft.","warn");return}const name=selectedDav.split('/').filter(Boolean).pop()||"IServ";sources.push({name,iserv_path:selectedDav,remarkable_dir:selectedRM});renderMappings(sources.length-1);status($("#mappingStatus"),`${LANG==="en"?"Linked":"Verknüpft"}: /${selectedDav} → ${selectedRM}`,"ok");clearSelected()});
+function renderMappings(highlight=-1){$("#mappings").innerHTML=sources.length?sources.map((s,i)=>`<div class="mapping ${i===highlight?"just-added":""}" data-i="${i}"><div><label for="mapping-name-${i}">Name</label><input id="mapping-name-${i}" class="mn" type="text" value="${esc(s.name)}"></div><div><span class="field-label">${LANG==="en"?"IServ source":"IServ-Quelle"}</span><div class="readonly">/${esc(s.iserv_path)}</div></div><div><span class="field-label">${LANG==="en"?"reMarkable destination":"reMarkable-Ziel"}</span><div class="readonly">${esc(s.remarkable_dir)}</div></div><button class="danger mdel">${t("remove")}</button></div>`).join(""):`<div class="statusbox warn">${LANG==="en"?"No folder mapping yet.":"Noch keine Ordnerverknüpfung."}</div>`;document.querySelectorAll(".mapping").forEach(row=>{const i=Number(row.dataset.i);row.querySelector(".mn").addEventListener("input",e=>sources[i].name=e.target.value);row.querySelector(".mdel").addEventListener("click",()=>{sources.splice(i,1);renderMappings()})})}
+function updateScheduleSummary(){const days=Object.values(schedule).filter(a=>a?.length).length,total=Object.values(schedule).reduce((s,a)=>s+(a?.length||0),0);$("#scheduleSummary").textContent=LANG==="en"?`${days} active ${days===1?"day":"days"} · ${total} time windows`:`${days} ${days===1?"aktiver Tag":"aktive Tage"} · ${total} Zeitfenster`}
+function updateActiveDayMeta(){const arr=schedule[String(activeDay)]||[],names=dayLong();$("#activeDayTitle").textContent=names[activeDay];$("#copySourceDay").textContent=names[activeDay];$("#activeDayHint").textContent=arr.length?(LANG==="en"?`${arr.length} time window${arr.length===1?"":"s"} configured.`:`${arr.length} Zeitfenster eingerichtet.`):(LANG==="en"?"No time windows. This day remains inactive.":"Noch keine Zeitfenster eingerichtet. Dieser Tag bleibt damit inaktiv.")}
+function renderDays(){const names=dayLong();$("#dayButtons").innerHTML=Object.entries(dayNames).map(([d,n])=>{const c=(schedule[d]||[]).length;return `<button class="daybtn ${Number(d)===activeDay?"active":""}" data-day="${d}"><span class="day-meta"><span class="day-name">${n}</span><span class="day-sub">${c?(LANG==="en"?`${c} time window${c===1?"":"s"}`:`${c} Zeitfenster`):t("inactive")}</span></span><span class="day-count">${c}</span></button>`}).join("");document.querySelectorAll(".daybtn").forEach(b=>b.addEventListener("click",()=>{activeDay=Number(b.dataset.day);renderDays();renderWindows();renderCopy()}));updateScheduleSummary();updateActiveDayMeta()}
+function renderWindows(){const arr=schedule[String(activeDay)]||[],names=dayLong();$("#windows").innerHTML=arr.length?arr.map((w,i)=>{const startID=`window-${activeDay}-${i}-start`,endID=`window-${activeDay}-${i}-end`;return `<div class="window-card" data-i="${i}"><div class="window-index">${t("window")} ${i+1}</div><div class="time-fields"><div><label for="${startID}">${t("from")}</label><input id="${startID}" class="ws" type="time" value="${w.start}"></div><div class="time-arrow">→</div><div><label for="${endID}">${t("to")}</label><input id="${endID}" class="we" type="time" value="${w.end}"></div></div><button class="danger wdel">${t("remove")}</button></div>`}).join(""):`<div class="empty-state"><strong>${LANG==="en"?"This day is inactive.":"Dieser Tag ist aktuell inaktiv."}</strong><br><span class="muted">${LANG==="en"?`Add a time window to allow automatic sync on ${names[activeDay]}.`:`Füge ein Zeitfenster hinzu, wenn an ${names[activeDay]} automatische Synchronisation erlaubt sein soll.`}</span></div>`;document.querySelectorAll(".window-card").forEach(row=>{const i=Number(row.dataset.i);row.querySelector(".ws").addEventListener("input",e=>schedule[String(activeDay)][i].start=e.target.value);row.querySelector(".we").addEventListener("input",e=>schedule[String(activeDay)][i].end=e.target.value);row.querySelector(".wdel").addEventListener("click",()=>{schedule[String(activeDay)].splice(i,1);renderDays();renderWindows()})});updateActiveDayMeta()}
+$("#addWindow").addEventListener("click",()=>{schedule[String(activeDay)].push({start:"08:00",end:"09:00"});renderDays();renderWindows()});$("#toggleCopy").addEventListener("click",()=>{$("#copyPanel").classList.toggle("hidden");renderCopy()});function renderCopy(){const names=dayLong();$("#copySourceDay").textContent=names[activeDay];$("#copyDays").innerHTML=Object.entries(dayNames).filter(([d])=>Number(d)!==activeDay).map(([d,n])=>`<label><input type="checkbox" value="${d}"> ${names[Number(d)]} <span class="muted">(${n})</span></label>`).join("")}$("#copyApply").addEventListener("click",()=>{document.querySelectorAll("#copyDays input:checked").forEach(c=>schedule[c.value]=structuredClone(schedule[String(activeDay)]));renderDays();renderCopy();$("#copyPanel").classList.add("hidden")});
+function securePassword(){const chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%+-_";const bytes=new Uint32Array(24);crypto.getRandomValues(bytes);return Array.from(bytes,n=>chars[n%chars.length]).join("")}
+$("#generatePassword").addEventListener("click",()=>{$("#adminPassword").value=securePassword();$("#adminPassword").type="text";$("#togglePassword").textContent=LANG==="en"?"Hide":"Verbergen"});$("#togglePassword").addEventListener("click",()=>{const p=$("#adminPassword");p.type=p.type==="password"?"text":"password";$("#togglePassword").textContent=p.type==="password"?(LANG==="en"?"Show":"Anzeigen"):(LANG==="en"?"Hide":"Verbergen")});
+function collectConfig(){const extensions=[];if($("#pdf").checked)extensions.push("pdf");if($("#epub").checked)extensions.push("epub");return{region:$("#region").value.trim(),fly_org_slug:$("#flyOrgSelect").value,admin_password:$("#adminPassword").value,interval_minutes:Number($("#interval").value),schedule,lookback_days:Number($("#lookback").value),max_file_mb:Number($("#maxFile").value),extensions,sources}}
+$("#startInstall").addEventListener("click",async()=>{const b=$("#startInstall");busy(b,true);try{await api("/api/config","PUT",collectConfig());await api("/api/install/start","POST");status($("#installStatus"),t("runInstall"),"warn");poll()}catch(e){status($("#installStatus"),e.message,"error");busy(b,false)}});
+function renderInstallProgress(d){const p=Math.max(0,Math.min(100,Number(d.install_progress||0)));$("#installProgress").classList.toggle("hidden",d.install_status==="idle"&&!p);$("#installProgressFill").style.width=p+"%";$("#installPercent").textContent=p+" %";$("#installPhase").textContent=d.install_phase||(LANG==="en"?"Preparing …":"Vorbereitung …")}
+async function poll(){try{const d=await api("/api/state");renderInstallProgress(d);$("#logs").textContent=(d.logs||[]).join("\n")||(LANG==="en"?"No installation messages yet.":"Noch keine Installationsmeldungen.");$("#logs").scrollTop=$("#logs").scrollHeight;if(d.install_status==="completed"){status($("#installStatus"),t("installOK"),"ok");if(d.verification){$("#verificationText").textContent=LANG==="en"?`${d.verification.stats.checked} files checked · ${d.verification.stats.would_upload} would be uploaded · 0 uploaded during setup`:`${d.verification.stats.checked} Dateien geprüft · ${d.verification.stats.would_upload} würden hochgeladen · während des Setups 0 hochgeladen`}$("#done").classList.remove("hidden");$("#startInstall").classList.add("hidden");busy($("#startInstall"),true);return}if(d.install_status==="failed"){status($("#installStatus"),d.install_error||t("installFail"),"error");$("#startInstall").textContent=t("resumeInstall");busy($("#startInstall"),false);return}setTimeout(poll,1600)}catch(e){setTimeout(poll,3000)}}
+$("#openDashboard").addEventListener("click",()=>api("/api/dashboard/open","POST").catch(e=>alert(e.message)));
+function healthLabel(ok, goodDE, goodEN, badDE, badEN){return ok?(LANG==="en"?goodEN:goodDE):(LANG==="en"?badEN:badDE)}
+function healthItem(title,state,text){return `<div class="health-item ${state}"><strong>${esc(title)}</strong><span class="health-state"><span class="health-dot"></span><span>${esc(text)}</span></span></div>`}
+function renderMaintenanceHealth(d){
+  const dash=Boolean(d.dashboard_ok),fly=Boolean(d.fly_ok),count=Number(d.fly_machine_count||0),version=d.version||"—",versionCurrent=d.version_current===true;
+  const machineOK=fly&&count===1;
+  $("#maintenanceHealth").innerHTML=[
+    healthItem("Dashboard",dash?"ok":"error",healthLabel(dash,"erreichbar","reachable","nicht erreichbar","not reachable")),
+    healthItem("Fly.io",fly?"ok":(d.fly_auth===false?"warn":"error"),fly?healthLabel(true,"verbunden","connected","",""):(d.fly_auth===false?(LANG==="en"?"sign-in required":"Anmeldung nötig"):(LANG==="en"?"needs attention":"prüfen"))),
+    healthItem(LANG==="en"?"Sync machine":"Sync-Machine",machineOK?"ok":(fly?"error":"warn"),machineOK?(LANG==="en"?"exactly one":"genau eine"):(fly?`${count} ${LANG==="en"?"found":"gefunden"}`:(LANG==="en"?"not checked":"nicht geprüft"))),
+    healthItem(LANG==="en"?"Fly control permission":"Fly-Steuerberechtigung",d.fly_token_ok===false?"warn":"ok",d.fly_token_days_remaining!=null?(LANG==="en"?`${d.fly_token_days_remaining} days remaining`:`noch ${d.fly_token_days_remaining} Tage`):(LANG==="en"?"managed during cloud updates":"wird bei Cloud-Updates verwaltet")),
+    healthItem(LANG==="en"?"Cloud version":"Cloud-Version",versionCurrent?"ok":"error",versionCurrent?`v${version}`:(LANG==="en"?`v${version} · update to v${d.current_version}`:`v${version} · auf v${d.current_version} aktualisieren`))
+  ].join("");
+}
+
+$("#recoveryConnect").addEventListener("click",async()=>{const b=$("#recoveryConnect");const box=$("#recoveryStatus");box.classList.remove("hidden");const dashboard_url=$("#recoveryDashboardURL").value.trim(),password=$("#recoveryPassword").value;if(!dashboard_url||!password){status(box,LANG==="en"?"Enter the dashboard address and password.":"Gib Dashboard-Adresse und Passwort ein.","error");return}busy(b,true);status(box,LANG==="en"?"Securely reconnecting the existing installation …":"Bestehende Installation wird sicher wieder verbunden …","warn");try{await api("/api/recovery/connect","POST",{dashboard_url,password});$("#recoveryPassword").value="";status(box,LANG==="en"?"Installation connected. Opening maintenance center …":"Installation verbunden. Wartungsbereich wird geöffnet …","ok");setTimeout(()=>location.reload(),650)}catch(e){status(box,e.message,"error")}finally{busy(b,false)}});
+
+$("#maintenanceOpen").addEventListener("click",()=>api("/api/dashboard/open","POST").catch(e=>status($("#maintenanceStatus"),e.message,"error")));
+$("#maintenanceFlyLogin").addEventListener("click",async()=>{const b=$("#maintenanceFlyLogin");busy(b,true);$("#maintenanceFlyCodePanel").classList.remove("hidden");$("#maintenanceFlyCode").placeholder=LANG==="en"?"Code shown by Fly.io":"Von Fly.io angezeigter Code";status($("#maintenanceConnectionStatus"),LANG==="en"?"Complete the fresh Fly.io sign-in. If Fly.io shows a code, enter it below.":"Schließe die neue Fly.io-Anmeldung ab. Falls Fly.io einen Code anzeigt, trage ihn unten ein.","warn");try{const d=await api("/api/fly/login","POST",{force:true});$("#maintenanceFlyCodePanel").classList.add("hidden");$("#maintenanceFlyCode").value="";status($("#maintenanceConnectionStatus"),(LANG==="en"?"Fly.io connected: ":"Fly.io verbunden: ")+d.account,"ok");$("#maintenanceCheck").click()}catch(e){$("#maintenanceFlyCodePanel").classList.add("hidden");status($("#maintenanceConnectionStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#maintenanceFlyCodeSubmit").addEventListener("click",async()=>{const b=$("#maintenanceFlyCodeSubmit"),code=$("#maintenanceFlyCode").value.trim();$("#maintenanceFlyCodeStatus").classList.remove("hidden");if(!code){status($("#maintenanceFlyCodeStatus"),LANG==="en"?"Enter the code shown by Fly.io.":"Trage den von Fly.io angezeigten Code ein.","warn");return}busy(b,true);status($("#maintenanceFlyCodeStatus"),LANG==="en"?"Submitting code …":"Code wird übermittelt …");try{await api("/api/fly/code","POST",{code});$("#maintenanceFlyCode").value="";status($("#maintenanceFlyCodeStatus"),LANG==="en"?"Code accepted. Confirming sign-in …":"Code akzeptiert. Anmeldung wird bestätigt …","ok")}catch(e){status($("#maintenanceFlyCodeStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#maintenanceFlyCode").addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();$("#maintenanceFlyCodeSubmit").click()}});
+$("#maintenanceCFLogin").addEventListener("click",async()=>{const b=$("#maintenanceCFLogin");busy(b,true);status($("#maintenanceConnectionStatus"),LANG==="en"?"Opening a fresh Cloudflare sign-in …":"Neue Cloudflare-Anmeldung wird geöffnet …","warn");try{const d=await api("/api/cloudflare/login","POST",{force:true});status($("#maintenanceConnectionStatus"),(LANG==="en"?"Cloudflare connected: ":"Cloudflare verbunden: ")+d.account,"ok");$("#maintenanceCheck").click()}catch(e){status($("#maintenanceConnectionStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#maintenanceCheck").addEventListener("click",async()=>{const b=$("#maintenanceCheck");busy(b,true);status($("#maintenanceStatus"),LANG==="en"?"Checking installation …":"Installation wird geprüft …");try{const d=await api("/api/maintenance/check","POST");renderMaintenanceHealth(d);const ok=d.dashboard_ok&&d.fly_ok&&Number(d.fly_machine_count)===1&&d.fly_token_ok!==false&&d.version_current===true;const versionWarning=d.version_current===true?"":(LANG==="en"?`Cloud components are still v${d.version||"unknown"}. Choose “Update cloud components” before another real run or enabling automation.`:`Die Cloud-Komponenten laufen noch mit v${d.version||"unbekannt"}. Wähle vor einem weiteren echten Lauf oder der Automatik „Cloud-Komponenten aktualisieren“.`);const msg=versionWarning||d.fly_token_warning||(ok?(LANG==="en"?"Installation looks healthy.":"Installation sieht gesund aus."):(LANG==="en"?"At least one component needs attention. No data was changed.":"Mindestens eine Komponente benötigt Aufmerksamkeit. Es wurden keine Daten verändert."));status($("#maintenanceStatus"),msg,ok?"ok":"warn")}catch(e){status($("#maintenanceStatus"),e.message,"error")}finally{busy(b,false)}});
+
+let repairIServReady=false,repairRMReady=false;
+$("#repairIServTest").addEventListener("click",async()=>{const b=$("#repairIServTest");busy(b,true);repairIServReady=false;$("#repairIServApply").disabled=true;status($("#maintenanceStatus"),LANG==="en"?"Testing new IServ credentials …":"Neue IServ-Zugangsdaten werden getestet …");try{await api("/api/iserv/connect","POST",{URL:$("#repairIServURL").value,User:$("#repairIServUser").value,Password:$("#repairIServPassword").value});repairIServReady=true;$("#repairIServApply").disabled=false;$("#repairIServStatus").textContent=LANG==="en"?"Connection successful. You can now apply these credentials.":"Verbindung erfolgreich. Diese Zugangsdaten können jetzt übernommen werden.";status($("#maintenanceStatus"),LANG==="en"?"IServ connection test successful.":"IServ-Verbindungstest erfolgreich.","ok")}catch(e){$("#repairIServStatus").textContent=e.message;status($("#maintenanceStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#repairIServApply").addEventListener("click",async()=>{if(!repairIServReady)return;const b=$("#repairIServApply");busy(b,true);try{await api("/api/maintenance/credentials","POST",{iserv:true,remarkable:false});status($("#maintenanceStatus"),LANG==="en"?"Applying IServ credentials …":"IServ-Zugangsdaten werden übernommen …","warn");pollMaintenance(()=>{repairIServReady=false;b.disabled=true;$("#repairIServPassword").value="";$("#repairIServStatus").textContent=LANG==="en"?"New IServ credentials were applied.":"Neue IServ-Zugangsdaten wurden übernommen."})}catch(e){status($("#maintenanceStatus"),e.message,"error");busy(b,false)}});
+
+$("#repairRMOpen").addEventListener("click",()=>window.open("https://my.remarkable.com/device/browser/connect","_blank","noopener"));
+$("#repairRMTest").addEventListener("click",async()=>{const b=$("#repairRMTest");busy(b,true);repairRMReady=false;$("#repairRMApply").disabled=true;status($("#maintenanceStatus"),LANG==="en"?"Connecting reMarkable …":"reMarkable wird neu verbunden …");try{await api("/api/remarkable/connect","POST",{code:$("#repairRMCode").value});repairRMReady=true;$("#repairRMApply").disabled=false;$("#repairRMCode").value="";$("#repairRMStatus").textContent=LANG==="en"?"New authorization successful. You can now apply it.":"Neue Autorisierung erfolgreich. Sie kann jetzt übernommen werden.";status($("#maintenanceStatus"),LANG==="en"?"reMarkable authorization successful.":"reMarkable-Autorisierung erfolgreich.","ok")}catch(e){$("#repairRMStatus").textContent=e.message;status($("#maintenanceStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#repairRMApply").addEventListener("click",async()=>{if(!repairRMReady)return;const b=$("#repairRMApply");busy(b,true);try{await api("/api/maintenance/credentials","POST",{iserv:false,remarkable:true});status($("#maintenanceStatus"),LANG==="en"?"Applying reMarkable authorization …":"reMarkable-Autorisierung wird übernommen …","warn");pollMaintenance(()=>{repairRMReady=false;b.disabled=true;$("#repairRMStatus").textContent=LANG==="en"?"New reMarkable authorization was applied.":"Neue reMarkable-Autorisierung wurde übernommen."})}catch(e){status($("#maintenanceStatus"),e.message,"error");busy(b,false)}});
+
+$("#maintenanceGeneratePassword").addEventListener("click",()=>{$("#maintenanceNewPassword").value=securePassword();$("#maintenanceNewPassword").type="text"});
+$("#maintenancePasswordApply").addEventListener("click",async()=>{const password=$("#maintenanceNewPassword").value;if(password.length<16){status($("#maintenanceStatus"),LANG==="en"?"The new password must be at least 16 characters.":"Das neue Passwort muss mindestens 16 Zeichen haben.","error");return}const b=$("#maintenancePasswordApply");busy(b,true);try{await api("/api/maintenance/password","POST",{password});status($("#maintenanceStatus"),LANG==="en"?"Changing dashboard password …":"Dashboard-Passwort wird geändert …","warn");pollMaintenance(()=>{$("#maintenanceNewPassword").value="";$("#maintenanceNewPassword").type="password"})}catch(e){status($("#maintenanceStatus"),e.message,"error");busy(b,false)}});
+
+function renderMaintenanceVerification(v){if(!v){status($("#maintenanceVerification"),LANG==="en"?"No maintenance test has been run yet.":"Noch kein Wartungs-Test durchgeführt.");return}const st=v.stats||{};const good=v.outcome!=="failed";const msg=LANG==="en"?`${st.checked||0} checked · ${st.would_upload||0} would synchronize · 0 uploaded by this test`:`${st.checked||0} geprüft · ${st.would_upload||0} würden synchronisiert · durch diesen Test 0 hochgeladen`;status($("#maintenanceVerification"),msg,good?"ok":"error")}
+$("#maintenanceVerify").addEventListener("click",async()=>{const password=$("#maintenanceVerifyPassword").value;if(!password){status($("#maintenanceVerification"),LANG==="en"?"Enter the current dashboard password.":"Gib das aktuelle Dashboard-Passwort ein.","error");return}const b=$("#maintenanceVerify");busy(b,true);status($("#maintenanceVerification"),LANG==="en"?"Safe test is running. Uploads are forced off …":"Sicherer Test läuft. Uploads sind zwangsweise deaktiviert …","warn");try{await api("/api/maintenance/verify","POST",{password});pollMaintenance(async()=>{const d=await api("/api/state");renderMaintenanceVerification(d.verification);$("#maintenanceVerifyPassword").value=""})}catch(e){status($("#maintenanceVerification"),e.message,"error");busy(b,false)}});
+
+$("#maintenanceUpdate").addEventListener("click",async()=>{const b=$("#maintenanceUpdate");busy(b,true);try{await api("/api/maintenance/update","POST");status($("#maintenanceStatus"),LANG==="en"?"Cloud update is running …":"Cloud-Update läuft …","warn");pollMaintenance(()=>$("#maintenanceCheck").click())}catch(e){status($("#maintenanceStatus"),e.message,"error");busy(b,false)}});
+$("#maintenanceUninstall").addEventListener("click",async()=>{if($("#uninstallConfirm").value!=="DELETE"){status($("#maintenanceStatus"),LANG==="en"?"Type DELETE to confirm uninstall.":"Gib DELETE ein, um die Deinstallation zu bestätigen.","error");return}if(!confirm(LANG==="en"?"Remove this installation from Fly.io and Cloudflare? Documents already on reMarkable will stay there.":"Diese Installation wirklich aus Fly.io und Cloudflare entfernen? Bereits auf dem reMarkable vorhandene Dokumente bleiben erhalten."))return;try{await api("/api/maintenance/uninstall","POST",{confirm:"DELETE"});status($("#maintenanceStatus"),LANG==="en"?"Uninstall is running …":"Deinstallation läuft …","warn");pollMaintenance()}catch(e){status($("#maintenanceStatus"),e.message,"error")}});
+async function pollMaintenance(done){try{const d=await api("/api/state");if(d.maintenance_status==="running"){setTimeout(()=>pollMaintenance(done),1500);return}document.querySelectorAll("#maintenanceCard button:disabled").forEach(b=>{if(b.id!=="repairIServApply"&&b.id!=="repairRMApply")b.disabled=false});if(d.maintenance_status==="completed"){status($("#maintenanceStatus"),LANG==="en"?"Action completed.":"Aktion abgeschlossen.","ok");if(done)await done(d);if(!d.meta){setInstalledMode(false);setTimeout(()=>location.reload(),700)}}else if(d.maintenance_status==="failed"){status($("#maintenanceStatus"),d.maintenance_error||"Error","error");if(d.maintenance_action==="verify")status($("#maintenanceVerification"),d.maintenance_error||"Error","error")}}catch(e){status($("#maintenanceStatus"),e.message,"error")}}
+
+$("#maintenanceDiagnostics").addEventListener("click",async()=>{const b=$("#maintenanceDiagnostics");busy(b,true);status($("#maintenanceDiagnosticsStatus"),LANG==="en"?"Creating privacy-friendly diagnostic report …":"Datenschutzfreundlicher Diagnosebericht wird erstellt …","warn");try{const d=await api("/api/maintenance/diagnostics","POST");$("#maintenanceDiagnosticsOpen").disabled=false;status($("#maintenanceDiagnosticsStatus"),LANG==="en"?`Diagnostic report created: ${d.path}`:`Diagnosebericht erstellt: ${d.path}`,"ok")}catch(e){status($("#maintenanceDiagnosticsStatus"),e.message,"error")}finally{busy(b,false)}});
+$("#maintenanceDiagnosticsOpen").addEventListener("click",async()=>{try{await api("/api/maintenance/diagnostics/open","POST")}catch(e){status($("#maintenanceDiagnosticsStatus"),e.message,"error")}});
+
+$("#appUpdateCheck").addEventListener("click",async()=>{try{const d=await api("/api/app/update/check","POST");if(!d.configured){status($("#maintenanceStatus"),LANG==="en"?"This development build has no public update channel yet.":"Diese Entwicklungsdatei hat noch keinen öffentlichen Update-Kanal.","warn");return}if(!d.available){status($("#maintenanceStatus"),LANG==="en"?"Installer is up to date.":"Installer ist aktuell.","ok");return}if(confirm(LANG==="en"?`Version ${d.latest} is available. Download the verified package?`:`Version ${d.latest} ist verfügbar. Geprüftes Paket herunterladen?`)){await api("/api/app/update/download","POST");status($("#maintenanceStatus"),LANG==="en"?"Update package verified and saved to Downloads.":"Updatepaket geprüft und in Downloads gespeichert.","ok")}}catch(e){status($("#maintenanceStatus"),e.message,"error")}});
+
+function setInstalledMode(on){document.querySelectorAll("[data-page]").forEach(n=>n.classList.toggle("hidden",on));$("#steps").classList.toggle("hidden",on);$("#wizardFooter").classList.toggle("hidden",on);$("#maintenanceCard").classList.toggle("hidden",!on);}
+api("/api/state").then(d=>{costAccepted=!!d.cost_accepted;flyConnected=!!d.fly_logged_in;cfConnected=!!d.cloudflare_logged_in;renderFlyOrganizations(d.fly_organizations,d.config?.fly_org_slug);renderInstallProgress(d);if(d.meta?.dashboard_url){setInstalledMode(true);$("#installedVersion").textContent=d.meta.version?`v${d.meta.version}`:(LANG==="en"?"Installed":"Installiert");renderMaintenanceVerification(d.verification);setTimeout(()=>$("#maintenanceCheck").click(),250)}else setInstalledMode(false);if(d.install_status==="running")poll()}).catch(()=>{});
+document.querySelectorAll(".statusbox").forEach(el=>el.setAttribute("aria-live","polite"));
+translateStatic();renderMappings();renderDays();renderWindows();renderCopy();showStep(1,false);setTimeout(()=>$("#systemCheck").click(),250);
+</script>
+<script nonce="__CSP_NONCE__">__MAPPINGS_SCRIPT__</script>
+</body>
+</html>

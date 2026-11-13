@@ -1,0 +1,12 @@
+{
+  "name": "iserv-remarkable-control",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "wrangler": "4.160.0"
+  }
+}

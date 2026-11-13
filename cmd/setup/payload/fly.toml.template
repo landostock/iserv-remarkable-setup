@@ -1,0 +1,27 @@
+app = "__APP_NAME__"
+primary_region = "__REGION__"
+
+[build]
+
+[env]
+  DATA_DIR = "/data"
+  RMAPI_CONFIG = "/data/rmapi.conf"
+  SYNC_CONFIG = "/app/config.json"
+  MIN_RUNTIME_SECONDS = "12"
+  MAX_UPLOADS_PER_RUN = "5"
+  RATE_LIMIT_COOLDOWN_SECONDS = "1800"
+  REMARQUEE_MIN_INTERVAL_SECONDS = "2.5"
+  RMAPI_CONCURRENT = "2"
+
+[mounts]
+  source = "sync_data"
+  destination = "/data"
+
+[[restart]]
+  policy = "never"
+  processes = ["app"]
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
+  processes = ["app"]

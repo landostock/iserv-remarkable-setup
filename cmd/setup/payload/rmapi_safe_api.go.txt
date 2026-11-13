@@ -1,0 +1,104 @@
+package api
+
+import (
+	"encoding/base64"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log"
+	"strings"
+	"time"
+
+	"github.com/juruen/rmapi/api/sync15"
+	"github.com/juruen/rmapi/filetree"
+	"github.com/juruen/rmapi/model"
+	"github.com/juruen/rmapi/transport"
+)
+
+const maxUserTokenBytes = 64 << 10
+
+type ApiCtx interface {
+	Filetree() *filetree.FileTreeCtx
+	FetchDocument(docId, dstPath string) error
+	CreateDir(parentId, name string, notify bool) (*model.Document, error)
+	UploadDocument(parentId string, sourceDocPath string, notify bool, coverpage *int, currentPage *int, pageCount *int, contrastFilter *string) (*model.Document, error)
+	ReplaceDocumentFile(docId, sourceDocPath string, notify bool) error
+	MoveEntry(src, dstDir *model.Node, name string) (*model.Node, error)
+	DeleteEntry(node *model.Node, recursive, notify bool) error
+	SyncComplete() error
+	Nuke() error
+	Refresh() (string, int64, error)
+}
+
+type userTokenClaims struct {
+	Auth0 struct {
+		UserID string
+		Email  string
+	} `json:"auth0-profile"`
+	Scopes    string `json:"Scopes"`
+	ExpiresAt int64  `json:"exp"`
+}
+
+type SyncVersion int
+
+const (
+	Version15 SyncVersion = 15
+)
+
+func (s SyncVersion) String() string {
+	switch s {
+	case Version15:
+		return "1.5"
+	default:
+		return "unknown"
+	}
+}
+
+type UserInfo struct {
+	SyncVersion SyncVersion
+	User        string
+}
+
+// ParseToken reads only the bounded JWT payload needed to select the sync API.
+// Signature validation remains the responsibility of the reMarkable service
+// when the bearer token is used for an authenticated request.
+func ParseToken(userToken string) (*UserInfo, error) {
+	if len(userToken) == 0 || len(userToken) > maxUserTokenBytes {
+		return nil, errors.New("invalid token size")
+	}
+	parts := strings.Split(userToken, ".")
+	if len(parts) != 3 || len(parts[1]) == 0 {
+		return nil, errors.New("invalid token format")
+	}
+	payload, err := base64.RawURLEncoding.DecodeString(parts[1])
+	if err != nil || len(payload) > maxUserTokenBytes {
+		return nil, errors.New("invalid token payload")
+	}
+	var claims userTokenClaims
+	if err := json.Unmarshal(payload, &claims); err != nil {
+		return nil, errors.New("invalid token claims")
+	}
+	if claims.ExpiresAt != 0 && time.Now().Unix() > claims.ExpiresAt {
+		return nil, errors.New("token expired")
+	}
+
+	info := &UserInfo{User: claims.Auth0.Email, SyncVersion: Version15}
+	for _, scope := range strings.Fields(claims.Scopes) {
+		switch scope {
+		case "sync:fox", "sync:tortoise", "sync:hare":
+			return info, nil
+		}
+	}
+	return info, nil
+}
+
+// CreateApiCtx initializes an instance of ApiCtx.
+func CreateApiCtx(httpCtx *transport.HttpClientCtx, syncVersion SyncVersion) (ApiCtx, error) {
+	switch syncVersion {
+	case Version15:
+		return sync15.CreateCtx(httpCtx)
+	default:
+		log.Printf("unsupported sync version: %v", syncVersion)
+		return nil, fmt.Errorf("unsupported sync version: %v", syncVersion)
+	}
+}

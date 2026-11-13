@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=IServ → reMarkable
+Name[de]=IServ → reMarkable
+Comment=Set up and maintain IServ to reMarkable synchronization
+Comment[de]=IServ-zu-reMarkable-Synchronisation einrichten und warten
+Exec=/usr/lib/iserv-remarkable-setup/iserv-remarkable-setup
+Icon=iserv-remarkable-setup
+Terminal=false
+Categories=Utility;Network;
+StartupNotify=true

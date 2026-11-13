@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.landostock.IServRemarkableSetup</id>
+  <name>IServ → reMarkable</name>
+  <summary>Set up and maintain IServ to reMarkable synchronization</summary>
+  <summary xml:lang="de">IServ-zu-reMarkable-Synchronisation einrichten und warten</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <url type="homepage">https://github.com/landostock/iserv-remarkable</url>
+  <url type="bugtracker">https://github.com/landostock/iserv-remarkable-setup/issues</url>
+  <description>
+    <p>Guided setup and maintenance for a user-owned IServ to reMarkable synchronization deployment.</p>
+    <p xml:lang="de">Geführte Einrichtung und Wartung einer nutzereigenen IServ-zu-reMarkable-Synchronisation.</p>
+  </description>
+  <launchable type="desktop-id">iserv-remarkable.desktop</launchable>
+  <content_rating type="oars-1.1" />
+</component>

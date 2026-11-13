@@ -1,0 +1,89 @@
+name: Native platform smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    name: ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Linux x64
+            runner: ubuntu-24.04
+            exe: ""
+          - label: Linux ARM64
+            runner: ubuntu-24.04-arm
+            exe: ""
+          - label: Windows x64
+            runner: windows-latest
+            exe: .exe
+          - label: Windows ARM64
+            runner: windows-11-arm
+            exe: .exe
+          - label: macOS Apple Silicon
+            runner: macos-15
+            exe: ""
+          - label: macOS Intel
+            runner: macos-15-intel
+            exe: ""
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    env:
+      ISERV_RM_TEST_MANAGED_TOOLS: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Record native platform
+        run: go env GOOS GOARCH GOVERSION
+
+      - name: Exercise exact managed Node, npm and flyctl downloads
+        run: go test ./cmd/setup -run TestManagedToolDownloadsIntegration -count=1 -v
+
+      - name: Run setup package tests natively
+        env:
+          ISERV_RM_TEST_MANAGED_TOOLS: "0"
+        run: go test ./cmd/setup -count=1
+
+      - name: Build native setup companion
+        run: go build -trimpath -o setup-native${{ matrix.exe }} ./cmd/setup
+
+      - name: Fetch exact rmapi fork source for helper build
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none https://github.com/FNStudios-NI/rmapi.git .ci-rmapi
+          git -C .ci-rmapi checkout f295d5466978954edabaae4c730d50d03740cfac
+          cp cmd/setup/payload/rmapi_safe_api.go.txt .ci-rmapi/api/api.go
+          (cd .ci-rmapi && go mod edit -droprequire=github.com/golang-jwt/jwt)
+
+      - name: Build native reMarkable folder helper
+        shell: bash
+        working-directory: helper/rmfolder
+        run: |
+          set -euo pipefail
+          go mod edit -replace=github.com/juruen/rmapi=../../.ci-rmapi
+          go mod tidy
+          go build -trimpath -o ../../rmfolder-native${{ matrix.exe }} .
+
+      - name: Confirm native binaries exist
+        shell: bash
+        run: |
+          test -s setup-native${{ matrix.exe }}
+          test -s rmfolder-native${{ matrix.exe }}
+          test "$(./rmfolder-native${{ matrix.exe }} --self-test)" = "iserv-rm-folder-helper: ok"
